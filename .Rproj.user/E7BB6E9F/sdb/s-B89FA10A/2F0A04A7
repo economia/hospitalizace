@@ -1,0 +1,16 @@
+{
+    "contents" : "library(shiny)\n\nskupiny  <- read.csv(\"skupiny.csv\")\nkraje  <- read.csv(\"kraje.csv\", sep=\";\", header=F)\n\n# Define UI for application that plots random distributions \nshinyUI(pageWithSidebar(\n  \n# Application title\n  headerPanel(\"Všichni hospitalizovaní v České republice v letech 2007 - 2011\"),\n  \n# Sidebar \n  sidebarPanel(\n    selectInput(\"skupina\", \"1. Vyberte druh nemoci:\", \n                choices = skupiny$V2),\n\n    uiOutput(\"diagnozyVybrane\"),\n    \n    helpText(\"Nemoci jsou rozděleny podle klasifikace OECD. Dokud nevyberete žádný druh nemoci, zobrazují se souhrnná data pro všechny pobyty v nemocnici. Nezvolíte-li přesnou diagnózu, uvidíte grafy a údaje pro celou kategorii. Některé kategorie nemocí se již dále nečlení, nelze proto vybrat přesnou diagnózu a k dispozici je jen volba \\\"Vše\\\".\"),\n    selectInput(\"kraj\", \"3. Zajímá-li vás jen určitý kraj, vyberte jej zde:\", \n                choices = kraje$V2)    \n  ),\n  \n# Show a plot of the generated distribution\n  mainPanel(\n\n  )\n))\n",
+    "created" : 1372766355432.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1511443782",
+    "id" : "2F0A04A7",
+    "lastKnownWriteTime" : 1372880854,
+    "path" : "~/Dropbox/code/hospitalizace/ui.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : true,
+    "type" : "r_source"
+}

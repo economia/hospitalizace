@@ -1,0 +1,16 @@
+{
+    "contents" : "library(shiny)\nlibrary(ggplot2)\n\ndiagnozy  <- read.csv(\"diagnozy.csv\", header=F)\nhospitalizace  <- read.csv(\"hospitalizace.csv\")\n\nfiltrujDiagnozy <- function(vybrano) {\n  if (vybrano == \"Vše\") {\n    return (diagnozy$V2)\n  } else {\n      filtrovane  <- diagnozy[substr(diagnozy$V1,1,2)==substr(diagnozy[diagnozy$V2==vybrano,]$V1,1,2),]$V2\n      filtrovane  <- as.character(filtrovane)\n      filtrovane[1]  <- \"Vše\"\n      return(filtrovane)\n    \n  }\n}\n\nshinyServer(function(input, output) {\n  \n  output$diagnozyVybrane <- renderUI({\n    vybranaSkupina <- filtrujDiagnozy(input$skupina)\n    selectInput(\"diagnoza\", \"2. Upřesněte diagnózu:\", \n                choices = vybranaSkupina)\n  })\n  \n  \n  })",
+    "created" : 1372857678316.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1156281950",
+    "id" : "ADCBB48F",
+    "lastKnownWriteTime" : 1372928592,
+    "path" : "~/Dropbox/code/hospitalizace/server.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

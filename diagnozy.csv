@@ -1,0 +1,152 @@
+A000,Vše
+A100,Některé infekční a parazitární nemoci
+A101,Střevní infekční nemoci kromě průjmu - diarrhoey
+A102,Průjem-diarrhoea a gastroenteritida předpokládaného infekčního původu
+A103,Tuberkulóza
+A104,Septikémie
+A105,Onemocnění virem lidské imunodeficience /HIV/
+A106,Ostatní infekční a parazitární nemoci
+A200,Novotvary
+A201,"Zhoubný novotvar tlustého střeva, konečníku a řiti"
+A202,"Zhoubný novotvar průdušnice, průdušky a plíce"
+A203,Zhoubný novotvar kůže
+A204,Zhoubný novotvar prsu
+A205,Zhoubný novotvar dělohy
+A206,Zhoubný novotvar vaječníku
+A207,Zhoubný novotvar prostaty
+A208,Zhoubný novotvar močového měchýře
+A209,Ostatní zhoubné novotvary
+A210,Carcinoma in situ
+A211,"Nezhoubný novotvar tlustého střeva, konečníku, řiti a řitního kanálu"
+A212,Leiomyom dělohy
+A213,Ostatní nezhoubné novotvary a novotvary nejistého nebo neznámého chování
+A300,"Nemoci krve, krvetvorných orgánů a některé poruchy týkající se mechanismu imunity"
+A301,Anémie
+A302,"Ostatní nemoci krve, krvetvorných orgánů a některé poruchy týkající se mechanismu imunity"
+A400,"Nemoci endokrinní, výživy a přeměny látek"
+A401,Diabetes mellitus
+A402,"Ostatní nemoci endokrinní, výživy a přeměny látek"
+A500,Poruchy duševní a poruchy chování
+A501,Demence
+A502,Poruchy duševní a poruchy chování způsobené alkoholem
+A503,Poruchy duševní a poruchy chování způsobené užíváním ostatních psychoaktivních látek
+A504,"Schizofrenie, poruchy schizotypální a poruchy s bludy"
+A505,Afektivní poruchy (poruchy nálady)
+A506,Ostatní poruchy duševní a poruchy chování
+A600,Nemoci nervové soustavy
+A601,Alzheimerova nemoc
+A602,Roztroušená skleróza
+A603,Epilepsie
+A604,Přechodné mozkové ischemické záchvaty a příbuzné syndromy
+A605,Ostatní nemoci nervové soustavy
+A700,Nemoci oka a očních adnex
+A701,Katarakta
+A702,Ostatní nemoci oka a očních adnex
+A800,Nemoci ucha a bradavkového výběžku
+A900,Nemoci oběhové soustavy
+A901,Hypertenzní nemoci
+A902,Angina pectoris
+A903,Akutní infarkt myokardu
+A904,Ostatní ischemické nemoci srdeční
+A905,Kardiopulmonální nemoc a nemoci plicního oběhu
+A906,Poruchy vedení srdečních vzruchů a srdeční arytmie
+A907,Selhání srdce
+A908,Cévní nemoci mozku
+A909,Ateroskleróza
+A910,Varixy dolních končetin
+A911,Ostatní nemoci oběhové soustavy
+B000,Nemoci dýchací soustavy
+B001,Akutní infekce horních dýchacích cest a chřipka
+B002,Pneumonie - zánět plic
+B003,Ostatní akutní infekce dolní části dýchacích cest
+B004,Chronické nemoci mandlí a adenoidní tkáně
+B005,Ostatní nemoci horních dýchacích cest
+B006,Chronická obstruktivní plicní nemoc a bronchiektazie
+B007,Astma
+B008,Ostatní nemoci dýchací soustavy
+B100,Nemoci trávicí soustavy
+B101,Poruchy zubů a podpůrných tkání
+B102,"Ostatní nemoci dutiny ústní, slinných žláz a čelistí"
+B103,Nemoci jícnu
+B104,Peptický vřed
+B105,Dyspepsie a ostatní nemoci žaludku a dvanáctníku
+B106,Nemoci apendixu
+B107,Tříselná kýla
+B108,Ostatní břišní kýly
+B109,Crohnova nemoc a ulcerózní kolitida
+B110,Jiná neinfekční gastroenteritida a kolitida
+B111,Paralytický ileus a střevní neprůchodnost bez kýly
+B112,Divertikulární nemoc střeva
+B113,Nemoci řiti a konečníku
+B114,Ostatní nemoci střev
+B115,Alkoholické onemocnění jater
+B116,Ostatní nemoci jater
+B117,žlučové kameny - cholelithiasis
+B118,Ostatní nemoci žlučníku a žlučových cest (žlučového stromu)
+B119,Nemoci slinivky břišní
+B120,Ostatní nemoci trávicí soustavy
+B200,Nemoci kůže a podkožního vaziva
+B201,Infekce kůže a podkožního vaziva
+B202,"Dermatitis, ekzém a papuloskvamózní onemocnění"
+B203,Ostatní nemoci kůže a podkožního vaziva
+B300,Nemoci svalové a kosterní soustavy a pojivové tkáně
+B301,Artróza kyčelního kloubu - coxarthrosis
+B302,Artróza kolenního kloubu - gonarthrosis
+B303,Vnitřní poruchy kolenního kloubu
+B304,Ostatní artropatie
+B305,Systémová onemocnění pojivové tkáně
+B306,Deformující dorzopatie a spondylopatie
+B307,Onemocnění meziobratlových plotének
+B308,Dorzalgie
+B309,Onemocnění měkké tkáně
+B310,Ostatní poruchy svalové a kosterní soustavy a pojivové tkáně
+B400,Nemoci močové a pohlavní soustavy
+B401,Nemoci glomerulů a tubulo-intersticiální nemoci ledvin
+B402,Selhání ledvin
+B403,Urolitiáza
+B404,Ostatní nemoci močové soustavy
+B405,Zbytnění prostaty - hyperplazie prostaty
+B406,Ostatní nemoci mužských pohlavních orgánů
+B407,Nemoci prsu
+B408,Zánětlivá onemocnění ženských pánevních orgánů
+B409,"Menstruační, menopauzální a ostatní stavy  ženského pohlavního ústrojí"
+B410,Ostatní poruchy  močové a pohlavní soustavy
+B500,"Těhotenství, porod a šestinedělí"
+B501,Lékařský potrat
+B502,Ostatní těhotenství končící potratem
+B503,Komplikace těhotenství převážně v prenatálním období
+B504,Komplikace těhotenství převážně během porodu
+B505,Spontánní porod jediného dítěte
+B506,Ostatní porody
+B507,Komplikace spojené převážně s šestinedělím
+B508,Jiné porodnické stavy
+B600,Některé stavy vzniklé v perinatálním období
+B601,Poruchy v souvislosti se zkráceným trváním těhotenství a nízkou porodní hmotností
+B602,Ostatní stavy vzniklé v perinatálním období
+B700,"Vrozené vady, deformace a chromosomální abnormality"
+B800,"Příznaky, znaky a abnormální klinické a laboratorní nálezy nezařazené jinde"
+B801,Bolest v hrdle a na hrudi
+B802,Břišní a pánevní bolest
+B803,Neznámé a neurčené příčiny nemocnosti (patří sem ty bez diagnóz)
+B804,"Ostatní příznaky, znaky a abnormální klinické a laboratorní nálezy"
+B900,"Poranění, otravy a některé jiné následky vnějších příčin"
+B901,Nitrolební poranění
+B902,Ostatní poranění hlavy
+B903,Zlomenina lokte a předloktí
+B904,Zlomenina kosti stehenní
+B905,"Zlomenina bérce, včetně kotníku"
+B906,Ostatní poranění
+B907,Popáleniny a poleptání
+B908,"Otrava léky, léčivy, návykovými a biologickými látkami a toxické účinky látek převážně mimo"
+B909,"Komplikace zdravotní péče, nezařazené jinde"
+B910,"Následky poranění, otravy a jiných následků vnějších příčin"
+B911,Ostatní a nespecifické účinky vnějších příčin
+C100,Faktory ovlivňující zdravotní stav a kontakt se zdravotnickými službami
+C101,Lékařské pozorování a hodnocení pro podezření na nemoci a patologické stavy
+C102,Řízení antikoncepce
+C103,živě narozené děti podle místa narození
+C104,Jiná lékařská péče (patří sem readioterapeutické série a chemoterapeutické cykly)
+C105,Ostatní faktory ovlivňující zdravotní stav a kontakt se zdravotnickými službami
+C200,Kódy pro speciální účely
+C201,Nové diagnózy nejisté etiologie
+C202,Bakteriální původce rezistentní na antibiotika
