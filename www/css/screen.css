@@ -1,0 +1,8 @@
+body {
+  margin: 0px;
+}
+body #wrap {
+  margin: 20px;
+  outline: 2px solid #eee;
+  width: 670px;
+}
