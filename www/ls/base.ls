@@ -3,6 +3,7 @@ linePadding = 20
 barChartWidth = 200
 numOfYears = 5
 d3.selectAll ".fallback" .remove!
+new Tooltip!watchElements!
 loadHospitalizace = (cb) ->
     ssv = d3.dsv ";" "text/csv"
     (err, data) <~ ssv do

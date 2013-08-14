@@ -5,6 +5,7 @@
   barChartWidth = 200;
   numOfYears = 5;
   d3.selectAll(".fallback").remove();
+  new Tooltip().watchElements();
   loadHospitalizace = function(cb){
     var ssv, this$ = this;
     ssv = d3.dsv(";", "text/csv");
