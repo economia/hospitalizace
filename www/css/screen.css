@@ -1,8 +1,41 @@
 body {
   margin: 0px;
+  font-family: sans-serif;
 }
 body #wrap {
   margin: 20px;
   outline: 2px solid #eee;
   width: 670px;
+}
+body #wrap .container .row {
+  position: relative;
+  float: left;
+  height: 200px;
+  width: 100%;
+  border-bottom: 1px solid #999;
+}
+body #wrap .container .row h2 {
+  font-size: 1em;
+  margin: 0px;
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  z-index: 2;
+}
+body #wrap .container .row .sum {
+  position: relative;
+  border-right: 1px solid #999;
+  border-left: 1px solid #999;
+  width: 200px;
+  height: 200px;
+}
+body #wrap .container .row .sum .value {
+  background: #f00;
+  border-radius: 50%;
+  margin: auto;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
 }

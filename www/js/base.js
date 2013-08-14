@@ -1,5 +1,7 @@
 (function(){
-  var loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, this$ = this;
+  var lineHeight, linePadding, loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, this$ = this;
+  lineHeight = 200;
+  linePadding = 20;
   d3.selectAll(".fallback").remove();
   loadHospitalizace = function(cb){
     var ssv, this$ = this;
@@ -37,7 +39,7 @@
     });
   };
   async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje], function(err, arg$){
-    var hospitalizace, diagnozy, skupiny, kraje_raw, kraje, i$, len$, ref$, id, nazev, getRowsBySkupiny, draw;
+    var hospitalizace, diagnozy, skupiny, kraje_raw, kraje, i$, len$, ref$, id, nazev, getRowsBySkupiny, draw, drawSums;
     hospitalizace = arg$[0], diagnozy = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3];
     kraje = {};
     for (i$ = 0, len$ = kraje_raw.length; i$ < len$; ++i$) {
@@ -93,15 +95,33 @@
       });
     };
     draw = function(rows){
-      var container, x$;
+      var sums, container, x$;
       rows.sort(function(a, b){
         return b.sum - a.sum;
+      });
+      sums = rows.map(function(it){
+        return it.sum;
       });
       container = d3.select(".container");
       rows = container.selectAll(".row").data(rows).enter().append("div").attr('class', 'row');
       x$ = rows.append("h2");
       x$.text(function(it){
         return it.title;
+      });
+      return drawSums(sums, rows);
+    };
+    drawSums = function(sumValues, rows){
+      var scale, x$, y$;
+      scale = d3.scale.sqrt().domain([0, sumValues[0]]).range([0, lineHeight - 2 * linePadding]);
+      x$ = rows.append("div");
+      x$.attr('class', 'sum');
+      y$ = x$.append("div");
+      y$.attr('class', 'value');
+      y$.style('width', function(it){
+        return scale(it.sum) + "px";
+      });
+      y$.style('height', function(it){
+        return scale(it.sum) + "px";
       });
       return x$;
     };

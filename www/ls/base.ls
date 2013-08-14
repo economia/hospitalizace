@@ -1,3 +1,5 @@
+lineHeight = 200
+linePadding = 20
 d3.selectAll ".fallback" .remove!
 loadHospitalizace = (cb) ->
     ssv = d3.dsv ";" "text/csv"
@@ -54,6 +56,7 @@ getRowsBySkupiny = ->
             sumKraje: sumKrajeArray
 draw = (rows) ->
     rows.sort (a, b) -> b.sum - a.sum
+    sums = rows.map (.sum)
     container = d3.select ".container"
     rows = container
         .selectAll ".row"
@@ -63,4 +66,20 @@ draw = (rows) ->
     rows
         .append "h2"
             ..text -> it.title
+
+    drawSums sums, rows
+
+
+drawSums = (sumValues, rows) ->
+    scale = d3.scale.sqrt!
+        .domain [0 sumValues[0]]
+        .range [0 lineHeight - 2*linePadding]
+    rows.append "div"
+        ..attr \class \sum
+        ..append "div"
+            ..attr \class \value
+            ..style \width -> "#{scale it.sum}px"
+            ..style \height -> "#{scale it.sum}px"
+
+
 draw getRowsBySkupiny!
