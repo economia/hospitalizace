@@ -94,6 +94,9 @@
     };
     draw = function(rows){
       var container, x$;
+      rows.sort(function(a, b){
+        return b.sum - a.sum;
+      });
       container = d3.select(".container");
       rows = container.selectAll(".row").data(rows).enter().append("div").attr('class', 'row');
       x$ = rows.append("h2");

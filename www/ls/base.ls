@@ -53,6 +53,7 @@ getRowsBySkupiny = ->
             sumYears: sumYearsArray
             sumKraje: sumKrajeArray
 draw = (rows) ->
+    rows.sort (a, b) -> b.sum - a.sum
     container = d3.select ".container"
     rows = container
         .selectAll ".row"
