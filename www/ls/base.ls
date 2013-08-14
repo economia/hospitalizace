@@ -52,5 +52,14 @@ getRowsBySkupiny = ->
             sum: sum
             sumYears: sumYearsArray
             sumKraje: sumKrajeArray
-
-console.log getRowsBySkupiny!
+draw = (rows) ->
+    container = d3.select ".container"
+    rows = container
+        .selectAll ".row"
+        .data rows
+        .enter!.append "div"
+            .attr \class \row
+    rows
+        .append "h2"
+            ..text -> it.title
+draw getRowsBySkupiny!

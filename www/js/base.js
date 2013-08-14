@@ -37,7 +37,7 @@
     });
   };
   async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje], function(err, arg$){
-    var hospitalizace, diagnozy, skupiny, kraje_raw, kraje, i$, len$, ref$, id, nazev, getRowsBySkupiny;
+    var hospitalizace, diagnozy, skupiny, kraje_raw, kraje, i$, len$, ref$, id, nazev, getRowsBySkupiny, draw;
     hospitalizace = arg$[0], diagnozy = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3];
     kraje = {};
     for (i$ = 0, len$ = kraje_raw.length; i$ < len$; ++i$) {
@@ -92,6 +92,16 @@
         };
       });
     };
-    return console.log(getRowsBySkupiny());
+    draw = function(rows){
+      var container, x$;
+      container = d3.select(".container");
+      rows = container.selectAll(".row").data(rows).enter().append("div").attr('class', 'row');
+      x$ = rows.append("h2");
+      x$.text(function(it){
+        return it.title;
+      });
+      return x$;
+    };
+    return draw(getRowsBySkupiny());
   });
 }).call(this);
