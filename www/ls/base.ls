@@ -195,10 +195,9 @@ drawMap = (rows, rowsData) ->
                 data = rowsData[rowIndex]
                 data = rowsData[rowIndex]
                 krajSum = data.sumKraje[krajIndex]
-                escape "#{krajSum.kraj.nazev}: <strong>#{formatNumber Math.round krajSum.count / krajSum.kraj.obyvateleAverage * 100_000}</strong> hospitalizací na 100&nbsp;000 obyvatel"
+                escape "#{krajSum.kraj.nazev}: <strong>#{formatNumber Math.round krajSum.count / krajSum.kraj.obyvateleAverage * 100_000}</strong> hospitalizací na&nbsp;sto tisíc obyvatel"
             ..attr \fill ->
                 color getKrajValue ...
-    console.log tstMax
 
 formatNumber = (num) ->
     num .= toString!

@@ -273,12 +273,12 @@
         data = rowsData[rowIndex];
         data = rowsData[rowIndex];
         krajSum = data.sumKraje[krajIndex];
-        return escape(krajSum.kraj.nazev + ": <strong>" + formatNumber(Math.round(krajSum.count / krajSum.kraj.obyvateleAverage * 100000)) + "</strong> hospitalizací na 100&nbsp;000 obyvatel");
+        return escape(krajSum.kraj.nazev + ": <strong>" + formatNumber(Math.round(krajSum.count / krajSum.kraj.obyvateleAverage * 100000)) + "</strong> hospitalizací na&nbsp;sto tisíc obyvatel");
       });
       y$.attr('fill', function(){
         return color(getKrajValue.apply(this, arguments));
       });
-      return console.log(tstMax);
+      return y$;
     };
     formatNumber = function(num){
       num = num.toString();
