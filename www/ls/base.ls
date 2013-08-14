@@ -9,8 +9,8 @@ loadHospitalizace = (cb) ->
             pohlavi: if row.POHL == "1" then "muz" else "zena"
             vek: row.VEKKAT
             kraj: +row.KRAJ
-            hosp: +row.HOSP
-            kategorie: "#{row.KOD.substr 0 2}00"
+            pocetHospitalizovanych: +row.HOSP
+            skupina: "#{row.KOD.substr 0 2}00"
     cb err, data
 
 loadDiagnozy = (cb) ->
@@ -22,4 +22,18 @@ loadSkupiny = (cb) ->
 
 (err, [hospitalizace, diagnozy, skupiny]) <~ async.parallel [loadHospitalizace, loadDiagnozy, loadSkupiny]
 
+displayBySkupiny = ->
+    currentHospitalizaceIndex = 0
+    rows = skupiny.map (skupina) ->
+        sum = 0
+        loop
+            row = hospitalizace[currentHospitalizaceIndex]
+            if !row or row.skupina != skupina.kod
+                break
+            sum += row.pocetHospitalizovanych
+            currentHospitalizaceIndex++
+        return do
+            title: skupina.nazev
+            sum: sum
 
+console.log displayBySkupiny!
