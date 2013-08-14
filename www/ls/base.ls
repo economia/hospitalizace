@@ -56,6 +56,7 @@ for {kod, nazev} in diagnozy_raw
 for record in hospitalizace
     record.nazev = diagnozy[record.kod]
 
+
 recalculateKrajeObyv = ->
     for {rok, pohlavi, vek, kraj, pocet} in obyvatele
         kraje[kraj].obyvateleAverage += pocet / numOfYears
@@ -241,6 +242,15 @@ formatNumber = (num) ->
     if num.length > 3
         num = "#{num.substr 0, num.length - 3}&nbsp;#{num.substr -3}"
     num
+
+$selectSkupina = $ '<select />'
+    ..appendTo ".selectionRow"
+    ..on \change ->
+        draw getRows @value
+for skupina in skupiny
+    $ "<option value='#{skupina.kod}'>#{skupina.nazev}</option>"
+        ..appendTo $selectSkupina
+
 
 recalculateKrajeObyv!
 draw getRows!

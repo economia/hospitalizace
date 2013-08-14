@@ -63,7 +63,7 @@
     });
   };
   async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadGeoJsons, loadObyvatele], function(err, arg$){
-    var hospitalizace, diagnozy_raw, skupiny, kraje_raw, kraje_geojson, obyvatele, kraje, i$, len$, ref$, id, nazev, obyvateleAverage, ref1$, geometry, diagnozy, kod, record, recalculateKrajeObyv, getRows, draw, drawSums, drawBarCharts, drawMap, formatNumber;
+    var hospitalizace, diagnozy_raw, skupiny, kraje_raw, kraje_geojson, obyvatele, kraje, i$, len$, ref$, id, nazev, obyvateleAverage, ref1$, geometry, diagnozy, kod, record, recalculateKrajeObyv, getRows, draw, drawSums, drawBarCharts, drawMap, formatNumber, x$, $selectSkupina, skupina, y$;
     hospitalizace = arg$[0], diagnozy_raw = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3], kraje_geojson = arg$[4], obyvatele = arg$[5];
     kraje = {};
     for (i$ = 0, len$ = kraje_raw.length; i$ < len$; ++i$) {
@@ -337,6 +337,16 @@
       }
       return num;
     };
+    x$ = $selectSkupina = $('<select />');
+    x$.appendTo(".selectionRow");
+    x$.on('change', function(){
+      return draw(getRows(this.value));
+    });
+    for (i$ = 0, len$ = skupiny.length; i$ < len$; ++i$) {
+      skupina = skupiny[i$];
+      y$ = $("<option value='" + skupina.kod + "'>" + skupina.nazev + "</option>");
+      y$.appendTo($selectSkupina);
+    }
     recalculateKrajeObyv();
     return draw(getRows());
   });
