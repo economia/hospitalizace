@@ -1,5 +1,5 @@
 (function(){
-  var loadHospitalizace, loadDiagnozy, loadSkupiny, this$ = this;
+  var loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, this$ = this;
   d3.selectAll(".fallback").remove();
   loadHospitalizace = function(cb){
     var ssv, this$ = this;
@@ -30,16 +30,30 @@
       return cb(err, data);
     });
   };
-  async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny], function(err, arg$){
-    var hospitalizace, diagnozy, skupiny, displayBySkupiny;
-    hospitalizace = arg$[0], diagnozy = arg$[1], skupiny = arg$[2];
+  loadKraje = function(cb){
+    var this$ = this;
+    return d3.csv("../kraje.csv", function(err, data){
+      return cb(err, data);
+    });
+  };
+  async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje], function(err, arg$){
+    var hospitalizace, diagnozy, skupiny, kraje_raw, kraje, i$, len$, ref$, id, nazev, displayBySkupiny;
+    hospitalizace = arg$[0], diagnozy = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3];
+    kraje = {};
+    for (i$ = 0, len$ = kraje_raw.length; i$ < len$; ++i$) {
+      ref$ = kraje_raw[i$], id = ref$.id, nazev = ref$.nazev;
+      kraje[id] = {
+        nazev: nazev
+      };
+    }
     displayBySkupiny = function(){
       var currentHospitalizaceIndex, rows;
       currentHospitalizaceIndex = 0;
       return rows = skupiny.map(function(skupina){
-        var sum, sumYears, row, key$, sumYearsArray, res$, index, count;
+        var sum, sumYears, sumKraje, row, key$, sumYearsArray, res$, index, count, sumKrajeArray;
         sum = 0;
         sumYears = {};
+        sumKraje = {};
         for (;;) {
           row = hospitalizace[currentHospitalizaceIndex];
           if (!row || row.skupina !== skupina.kod) {
@@ -48,6 +62,8 @@
           sum += row.pocetHospitalizovanych;
           sumYears[key$ = row.rok] == null && (sumYears[key$] = 0);
           sumYears[row.rok] += row.pocetHospitalizovanych;
+          sumKraje[key$ = row.kraj] == null && (sumKraje[key$] = 0);
+          sumKraje[row.kraj] += row.pocetHospitalizovanych;
           currentHospitalizaceIndex++;
         }
         res$ = [];
@@ -59,10 +75,20 @@
           });
         }
         sumYearsArray = res$;
+        res$ = [];
+        for (index in sumKraje) {
+          count = sumKraje[index];
+          res$.push({
+            kraj: kraje[index],
+            count: count
+          });
+        }
+        sumKrajeArray = res$;
         return {
           title: skupina.nazev,
           sum: sum,
-          sumYears: sumYearsArray
+          sumYears: sumYearsArray,
+          sumKraje: sumKrajeArray
         };
       });
     };
