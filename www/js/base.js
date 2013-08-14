@@ -135,7 +135,7 @@
       return x$;
     };
     drawBarCharts = function(rows, rowsData){
-      var maxValue, i$, len$, row, j$, ref$, len1$, count, x$, scale, columnWidth, y$, z$;
+      var maxValue, i$, len$, row, j$, ref$, len1$, count, x$, scale, columnWidth, y$, z$, z1$;
       maxValue = -Infinity;
       for (i$ = 0, len$ = rowsData.length; i$ < len$; ++i$) {
         row = rowsData[i$];
@@ -157,7 +157,6 @@
         });
         max = scale(Math.max.apply(Math, values));
         bottom = ((lineHeight - 2 * linePadding) - max) / 2;
-        console.log(bottom);
         return bottom + "px";
       }).selectAll(".year").data(function(it){
         return it.sumYears;
@@ -170,12 +169,14 @@
       y$.style('left', function(data, index){
         return index * columnWidth + "px";
       });
-      y$.style('height', function(yearData, yearIndex, rowIndex){
+      z$ = y$.append('div');
+      z$.attr('class', 'value');
+      z$.style('height', function(yearData, yearIndex, rowIndex){
         return scale(yearData.count) + "px";
       });
-      z$ = y$.append('div');
-      z$.attr('class', 'popis');
-      z$.text(function(it){
+      z1$ = z$.append('div');
+      z1$.attr('class', 'popis');
+      z1$.text(function(it){
         return it.year;
       });
       return y$;

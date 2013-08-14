@@ -105,7 +105,6 @@ drawBarCharts = (rows, rowsData) ->
             values = data.sumYears.map (.count)
             max = scale Math.max ...values
             bottom = ((lineHeight - 2*linePadding) - max) / 2
-            console.log bottom
             "#{bottom}px"
         .selectAll ".year"
         .data -> it.sumYears
@@ -115,11 +114,13 @@ drawBarCharts = (rows, rowsData) ->
             ..attr \data-tooltip (data) -> "#{data.year} #{formatNumber data.count} hospitalizací"
             ..style \width "#{columnWidth-1}px"
             ..style \left (data, index) -> "#{index*columnWidth}px"
-            ..style \height (yearData, yearIndex, rowIndex) ->
-                "#{scale yearData.count}px"
             ..append \div
-                ..attr \class \popis
-                ..text -> it.year
+                ..attr \class \value
+                ..style \height (yearData, yearIndex, rowIndex) ->
+                    "#{scale yearData.count}px"
+                ..append \div
+                    ..attr \class \popis
+                    ..text -> it.year
 formatNumber = (num) ->
     num .= toString!
     if num.length > 3
