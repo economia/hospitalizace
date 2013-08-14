@@ -187,7 +187,7 @@
     formatNumber = function(num){
       num = num.toString();
       if (num.length > 3) {
-        num = num.substr(0, num.length - 3) + " " + num.substr(-3);
+        num = num.substr(0, num.length - 3) + "&nbsp;" + num.substr(-3);
       }
       return num;
     };
