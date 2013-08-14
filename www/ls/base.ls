@@ -10,6 +10,7 @@ loadHospitalizace = (cb) ->
             vek: row.VEKKAT
             kraj: +row.KRAJ
             hosp: +row.HOSP
+            kategorie: "#{row.KOD.substr 0 2}00"
     cb err, data
 
 loadDiagnozy = (cb) ->
@@ -20,5 +21,5 @@ loadSkupiny = (cb) ->
     cb err, data
 
 (err, [hospitalizace, diagnozy, skupiny]) <~ async.parallel [loadHospitalizace, loadDiagnozy, loadSkupiny]
-console.log skupiny
+
 

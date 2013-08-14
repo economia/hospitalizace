@@ -11,7 +11,8 @@
         pohlavi: row.POHL === "1" ? "muz" : "zena",
         vek: row.VEKKAT,
         kraj: +row.KRAJ,
-        hosp: +row.HOSP
+        hosp: +row.HOSP,
+        kategorie: row.KOD.substr(0, 2) + "00"
       };
     }, function(err, data){
       return cb(err, data);
@@ -32,6 +33,5 @@
   async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny], function(err, arg$){
     var hospitalizace, diagnozy, skupiny;
     hospitalizace = arg$[0], diagnozy = arg$[1], skupiny = arg$[2];
-    return console.log(skupiny);
   });
 }).call(this);
