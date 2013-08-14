@@ -27,17 +27,33 @@ loadSkupiny = (cb) ->
 loadKraje = (cb) ->
     (err, data) <~ d3.csv "../kraje.csv"
     cb err, data
+loadObyvatele = (cb) ->
+    ssv = d3.dsv ";" "text/csv"
+    (err, data) <~ ssv do
+        "../obyv.csv"
+        (row) ->
+            rok: row.ROK
+            pohlavi: if row.POHL == "1" then "muz" else "zena"
+            vek: row.VEKKAT
+            kraj: +row.KRAJ
+            pocet: +row.OBYV
+    cb err, data
 
 loadGeoJsons = (cb) ->
     (err, data) <~ d3.json "../kraje.geojson"
     cb err, data
 
-(err, [hospitalizace, diagnozy, skupiny, kraje_raw, kraje_geojson]) <~ async.parallel [loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadGeoJsons]
+(err, [hospitalizace, diagnozy, skupiny, kraje_raw, kraje_geojson, obyvatele]) <~ async.parallel [loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadGeoJsons, loadObyvatele]
 kraje = {}
 for {id, nazev} in kraje_raw
-    kraje[id] = {nazev}
+    obyvateleAverage = 0
+    kraje[id] = {nazev, obyvateleAverage}
 for {geometry, id} in kraje_geojson.features
     kraje[id].geometry = geometry
+
+recalculateKrajeObyv = ->
+    for {rok, pohlavi, vek, kraj, pocet} in obyvatele
+        kraje[kraj].obyvateleAverage += pocet / numOfYears
 
 getRowsBySkupiny = ->
     currentHospitalizaceIndex = 0
@@ -144,12 +160,17 @@ drawBarCharts = (rows, rowsData) ->
                     ..attr \class \popis
                     ..text -> it.year
 drawMap = (rows, rowsData) ->
+    tstMax = -Infinity
     getKrajValue = (item, krajIndex, rowIndex) ->
         data = rowsData[rowIndex]
         krajSum = data.sumKraje[krajIndex]
-        krajSum?.count || 0
+        return 0 if not krajSum.kraj.obyvateleAverage
+        value = (krajSum?.count || 0) / (krajSum.kraj.obyvateleAverage || 1)
+        if value > tstMax
+            tstMax := value
+        value
     color = d3.scale.linear!
-        .domain [0 139947/4 139947/2 139947/4*3 139947]
+        .domain [0 0.189/4 0.189/2 0.189/4*3 0.189]
         .range <[#FFFFB2 #FECC5C #FD8D3C #F03B20 #BD0026]>
 
     centroid = d3.geo.centroid kraje_geojson
@@ -164,6 +185,7 @@ drawMap = (rows, rowsData) ->
         .data ->
             it.sumKraje.map ->
                 count: it.count
+                obyvateleAverage: it.kraj.obyvateleAverage
                 geometry: it.kraj.geometry
                 title: it.kraj.nazev
                 type: \Feature
@@ -173,9 +195,10 @@ drawMap = (rows, rowsData) ->
                 data = rowsData[rowIndex]
                 data = rowsData[rowIndex]
                 krajSum = data.sumKraje[krajIndex]
-                escape "#{krajSum.kraj.nazev}: <strong>#{formatNumber krajSum.count}</strong> hospitalizací"
+                escape "#{krajSum.kraj.nazev}: <strong>#{formatNumber Math.round krajSum.count / krajSum.kraj.obyvateleAverage * 100_000}</strong> hospitalizací na 100&nbsp;000 obyvatel"
             ..attr \fill ->
                 color getKrajValue ...
+    console.log tstMax
 
 formatNumber = (num) ->
     num .= toString!
@@ -183,4 +206,5 @@ formatNumber = (num) ->
         num = "#{num.substr 0, num.length - 3}&nbsp;#{num.substr -3}"
     num
 
+recalculateKrajeObyv!
 draw getRowsBySkupiny!

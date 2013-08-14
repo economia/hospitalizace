@@ -1,5 +1,5 @@
 (function(){
-  var lineHeight, linePadding, barChartWidth, numOfYears, loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadGeoJsons, this$ = this;
+  var lineHeight, linePadding, barChartWidth, numOfYears, loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadObyvatele, loadGeoJsons, this$ = this;
   lineHeight = 200;
   linePadding = 20;
   barChartWidth = 200;
@@ -41,26 +41,51 @@
       return cb(err, data);
     });
   };
+  loadObyvatele = function(cb){
+    var ssv, this$ = this;
+    ssv = d3.dsv(";", "text/csv");
+    return ssv("../obyv.csv", function(row){
+      return {
+        rok: row.ROK,
+        pohlavi: row.POHL === "1" ? "muz" : "zena",
+        vek: row.VEKKAT,
+        kraj: +row.KRAJ,
+        pocet: +row.OBYV
+      };
+    }, function(err, data){
+      return cb(err, data);
+    });
+  };
   loadGeoJsons = function(cb){
     var this$ = this;
     return d3.json("../kraje.geojson", function(err, data){
       return cb(err, data);
     });
   };
-  async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadGeoJsons], function(err, arg$){
-    var hospitalizace, diagnozy, skupiny, kraje_raw, kraje_geojson, kraje, i$, len$, ref$, id, nazev, ref1$, geometry, getRowsBySkupiny, draw, drawSums, drawBarCharts, drawMap, formatNumber;
-    hospitalizace = arg$[0], diagnozy = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3], kraje_geojson = arg$[4];
+  async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadGeoJsons, loadObyvatele], function(err, arg$){
+    var hospitalizace, diagnozy, skupiny, kraje_raw, kraje_geojson, obyvatele, kraje, i$, len$, ref$, id, nazev, obyvateleAverage, ref1$, geometry, recalculateKrajeObyv, getRowsBySkupiny, draw, drawSums, drawBarCharts, drawMap, formatNumber;
+    hospitalizace = arg$[0], diagnozy = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3], kraje_geojson = arg$[4], obyvatele = arg$[5];
     kraje = {};
     for (i$ = 0, len$ = kraje_raw.length; i$ < len$; ++i$) {
       ref$ = kraje_raw[i$], id = ref$.id, nazev = ref$.nazev;
+      obyvateleAverage = 0;
       kraje[id] = {
-        nazev: nazev
+        nazev: nazev,
+        obyvateleAverage: obyvateleAverage
       };
     }
     for (i$ = 0, len$ = (ref$ = kraje_geojson.features).length; i$ < len$; ++i$) {
       ref1$ = ref$[i$], geometry = ref1$.geometry, id = ref1$.id;
       kraje[id].geometry = geometry;
     }
+    recalculateKrajeObyv = function(){
+      var i$, ref$, len$, ref1$, rok, pohlavi, vek, kraj, pocet, results$ = [];
+      for (i$ = 0, len$ = (ref$ = obyvatele).length; i$ < len$; ++i$) {
+        ref1$ = ref$[i$], rok = ref1$.rok, pohlavi = ref1$.pohlavi, vek = ref1$.vek, kraj = ref1$.kraj, pocet = ref1$.pocet;
+        results$.push(kraje[kraj].obyvateleAverage += pocet / numOfYears);
+      }
+      return results$;
+    };
     getRowsBySkupiny = function(){
       var currentHospitalizaceIndex, rows;
       currentHospitalizaceIndex = 0;
@@ -210,14 +235,22 @@
       return y$;
     };
     drawMap = function(rows, rowsData){
-      var getKrajValue, color, centroid, projection, geoPath, x$, svg, y$;
+      var tstMax, getKrajValue, color, centroid, projection, geoPath, x$, svg, y$;
+      tstMax = -Infinity;
       getKrajValue = function(item, krajIndex, rowIndex){
-        var data, krajSum;
+        var data, krajSum, value;
         data = rowsData[rowIndex];
         krajSum = data.sumKraje[krajIndex];
-        return (krajSum != null ? krajSum.count : void 8) || 0;
+        if (!krajSum.kraj.obyvateleAverage) {
+          return 0;
+        }
+        value = ((krajSum != null ? krajSum.count : void 8) || 0) / (krajSum.kraj.obyvateleAverage || 1);
+        if (value > tstMax) {
+          tstMax = value;
+        }
+        return value;
       };
-      color = d3.scale.linear().domain([0, 139947 / 4, 139947 / 2, 139947 / 4 * 3, 139947]).range(['#FFFFB2', '#FECC5C', '#FD8D3C', '#F03B20', '#BD0026']);
+      color = d3.scale.linear().domain([0, 0.189 / 4, 0.189 / 2, 0.189 / 4 * 3, 0.189]).range(['#FFFFB2', '#FECC5C', '#FD8D3C', '#F03B20', '#BD0026']);
       centroid = d3.geo.centroid(kraje_geojson);
       projection = d3.geo.mercator().center(centroid).scale(2000).translate([135, 100]);
       geoPath = d3.geo.path().projection(projection);
@@ -227,6 +260,7 @@
         return it.sumKraje.map(function(it){
           return {
             count: it.count,
+            obyvateleAverage: it.kraj.obyvateleAverage,
             geometry: it.kraj.geometry,
             title: it.kraj.nazev,
             type: 'Feature'
@@ -239,12 +273,12 @@
         data = rowsData[rowIndex];
         data = rowsData[rowIndex];
         krajSum = data.sumKraje[krajIndex];
-        return escape(krajSum.kraj.nazev + ": <strong>" + formatNumber(krajSum.count) + "</strong> hospitalizací");
+        return escape(krajSum.kraj.nazev + ": <strong>" + formatNumber(Math.round(krajSum.count / krajSum.kraj.obyvateleAverage * 100000)) + "</strong> hospitalizací na 100&nbsp;000 obyvatel");
       });
       y$.attr('fill', function(){
         return color(getKrajValue.apply(this, arguments));
       });
-      return y$;
+      return console.log(tstMax);
     };
     formatNumber = function(num){
       num = num.toString();
@@ -253,6 +287,7 @@
       }
       return num;
     };
+    recalculateKrajeObyv();
     return draw(getRowsBySkupiny());
   });
 }).call(this);
