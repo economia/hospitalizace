@@ -65,7 +65,7 @@
       var currentHospitalizaceIndex, rows;
       currentHospitalizaceIndex = 0;
       return rows = skupiny.map(function(skupina){
-        var sum, sumYears, sumKraje, row, key$, sumYearsArray, res$, index, count, sumKrajeArray;
+        var sum, sumYears, sumKraje, id, row, sumYearsArray, res$, index, count, sumKrajeArray;
         sum = 0;
         sumYears = {
           "2007": 0,
@@ -75,6 +75,9 @@
           "2011": 0
         };
         sumKraje = {};
+        for (id in kraje) {
+          sumKraje[id] = 0;
+        }
         for (;;) {
           row = hospitalizace[currentHospitalizaceIndex];
           if (!row || row.skupina !== skupina.kod) {
@@ -82,7 +85,6 @@
           }
           sum += row.pocetHospitalizovanych;
           sumYears[row.rok] += row.pocetHospitalizovanych;
-          sumKraje[key$ = row.kraj] == null && (sumKraje[key$] = 0);
           sumKraje[row.kraj] += row.pocetHospitalizovanych;
           currentHospitalizaceIndex++;
         }

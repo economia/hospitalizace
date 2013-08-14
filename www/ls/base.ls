@@ -50,13 +50,14 @@ getRowsBySkupiny = ->
             "2010": 0
             "2011": 0
         sumKraje = {}
+        for id of kraje
+            sumKraje[id] = 0
         loop
             row = hospitalizace[currentHospitalizaceIndex]
             if !row or row.skupina != skupina.kod
                 break
             sum += row.pocetHospitalizovanych
             sumYears[row.rok] += row.pocetHospitalizovanych
-            sumKraje[row.kraj] ?= 0
             sumKraje[row.kraj] += row.pocetHospitalizovanych
             currentHospitalizaceIndex++
         sumYearsArray = for index, count of sumYears
