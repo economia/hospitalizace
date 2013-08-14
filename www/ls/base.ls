@@ -126,6 +126,8 @@ getRows = (skupinaId) ->
 passingFilter = (record) ->
     if filters.pohlavi and record.pohlavi isnt filters.pohlavi
         return false
+    if filters.vek and record.vek isnt filters.vek
+        return false
     return true
 draw = (rowsData) ->
     rowsData.sort (a, b) -> b.sum - a.sum
@@ -166,10 +168,18 @@ drawSums = (sumValues, rows) ->
                         "#{Math.round it.sum / 5000}"
                     else
                         "méně než"
-                ..style \font-size -> "#{scale it.sum}em"
+                ..style \font-size ->
+                    height = scale it.sum
+                    if it.sum <= 1000
+                        height = Math.min height, 1.75
+                    "#{height}em"
             ..append \span
                 ..html "<br />tisíc hospitalizací"
-            ..style \height -> "#{heightScale it.sum}px"
+            ..style \height ->
+                height = heightScale it.sum
+                if it.sum <= 1000
+                    height = Math.min height, 45
+                "#{height}px"
 
 drawBarCharts = (rows, rowsData) ->
     maxValue = -Infinity
@@ -268,6 +278,17 @@ $selectPohlavi = $ "<select>
     ..appendTo ".selectionRow"
     ..on \change ->
         changeFilter "pohlavi" @value
+
+$selectVek = $ "<select>
+<option value='15-34'>15-34</option>
+<option value='35-44'>35-44</option>
+<option value='45-54'>45-54</option>
+<option value='55-64'>55-64</option>
+<option value='65-74'>65-74</option>
+<option value='75+'>75+</option>
+</select>"
+    ..appendTo ".selectionRow"
+    ..on \change -> changeFilter \vek @value
 
 filters = {}
 changeFilter = (field, value) ->

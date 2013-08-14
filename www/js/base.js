@@ -63,7 +63,7 @@
     });
   };
   async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadGeoJsons, loadObyvatele], function(err, arg$){
-    var hospitalizace, diagnozy_raw, skupiny, kraje_raw, kraje_geojson, obyvatele, kraje, i$, len$, ref$, id, nazev, obyvateleAverage, ref1$, geometry, diagnozy, kod, record, recalculateKrajeObyv, lastDisplayedRows, getRows, passingFilter, draw, drawSums, drawBarCharts, drawMap, formatNumber, x$, $selectSkupina, skupina, y$, z$, $selectPohlavi, filters, changeFilter;
+    var hospitalizace, diagnozy_raw, skupiny, kraje_raw, kraje_geojson, obyvatele, kraje, i$, len$, ref$, id, nazev, obyvateleAverage, ref1$, geometry, diagnozy, kod, record, recalculateKrajeObyv, lastDisplayedRows, getRows, passingFilter, draw, drawSums, drawBarCharts, drawMap, formatNumber, x$, $selectSkupina, skupina, y$, z$, $selectPohlavi, z1$, $selectVek, filters, changeFilter;
     hospitalizace = arg$[0], diagnozy_raw = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3], kraje_geojson = arg$[4], obyvatele = arg$[5];
     kraje = {};
     for (i$ = 0, len$ = kraje_raw.length; i$ < len$; ++i$) {
@@ -195,6 +195,9 @@
       if (filters.pohlavi && record.pohlavi !== filters.pohlavi) {
         return false;
       }
+      if (filters.vek && record.vek !== filters.vek) {
+        return false;
+      }
       return true;
     };
     draw = function(rowsData){
@@ -240,12 +243,22 @@
         }
       });
       z$.style('font-size', function(it){
-        return scale(it.sum) + "em";
+        var height;
+        height = scale(it.sum);
+        if (it.sum <= 1000) {
+          height = Math.min(height, 1.75);
+        }
+        return height + "em";
       });
       z1$ = y$.append('span');
       z1$.html("<br />tisíc hospitalizací");
       y$.style('height', function(it){
-        return heightScale(it.sum) + "px";
+        var height;
+        height = heightScale(it.sum);
+        if (it.sum <= 1000) {
+          height = Math.min(height, 45);
+        }
+        return height + "px";
       });
       return x$;
     };
@@ -370,6 +383,11 @@
     z$.appendTo(".selectionRow");
     z$.on('change', function(){
       return changeFilter("pohlavi", this.value);
+    });
+    z1$ = $selectVek = $("<select><option value='15-34'>15-34</option><option value='35-44'>35-44</option><option value='45-54'>45-54</option><option value='55-64'>55-64</option><option value='65-74'>65-74</option><option value='75+'>75+</option></select>");
+    z1$.appendTo(".selectionRow");
+    z1$.on('change', function(){
+      return changeFilter('vek', this.value);
     });
     filters = {};
     changeFilter = function(field, value){
