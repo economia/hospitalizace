@@ -125,7 +125,7 @@
       x$ = rows.append("div");
       x$.attr('class', 'sum');
       x$.attr('data-tooltip', function(it){
-        return "Průměrný roční počet hospitalizací " + formatNumber(Math.round(it.sum / 5));
+        return escape("Průměrně <strong>" + formatNumber(Math.round(it.sum / 5)) + "</strong> hospitalizací ročně");
       });
       y$ = x$.append("div");
       y$.attr('class', 'value');
@@ -166,7 +166,7 @@
       }).enter().append('div');
       y$.attr('class', 'year');
       y$.attr('data-tooltip', function(data){
-        return data.year + " " + formatNumber(data.count) + " hospitalizací";
+        return escape("<strong>" + formatNumber(data.count) + "</strong> hospitalizací");
       });
       y$.style('width', (columnWidth - 1) + "px");
       y$.style('left', function(data, index){

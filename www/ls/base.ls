@@ -84,7 +84,7 @@ drawSums = (sumValues, rows) ->
         .range [0 lineHeight - 2*linePadding]
     rows.append "div"
         ..attr \class \sum
-        ..attr \data-tooltip -> "Průměrný roční počet hospitalizací #{formatNumber Math.round it.sum / 5}"
+        ..attr \data-tooltip -> escape "Průměrně <strong>#{formatNumber Math.round it.sum / 5}</strong> hospitalizací ročně"
         ..append "div"
             ..attr \class \value
             ..style \width -> "#{scale it.sum}px"
@@ -112,7 +112,7 @@ drawBarCharts = (rows, rowsData) ->
         .enter!
         .append \div
             ..attr \class \year
-            ..attr \data-tooltip (data) -> "#{data.year} #{formatNumber data.count} hospitalizací"
+            ..attr \data-tooltip (data) -> escape "<strong>#{formatNumber data.count}</strong> hospitalizací"
             ..style \width "#{columnWidth-1}px"
             ..style \left (data, index) -> "#{index*columnWidth}px"
             ..append \div
