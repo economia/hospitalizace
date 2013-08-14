@@ -63,7 +63,7 @@
     });
   };
   async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadGeoJsons, loadObyvatele], function(err, arg$){
-    var hospitalizace, diagnozy_raw, skupiny, kraje_raw, kraje_geojson, obyvatele, kraje, i$, len$, ref$, id, nazev, obyvateleAverage, ref1$, geometry, diagnozy, kod, record, recalculateKrajeObyv, getRows, draw, drawSums, drawBarCharts, drawMap, formatNumber, x$, $selectSkupina, skupina, y$;
+    var hospitalizace, diagnozy_raw, skupiny, kraje_raw, kraje_geojson, obyvatele, kraje, i$, len$, ref$, id, nazev, obyvateleAverage, ref1$, geometry, diagnozy, kod, record, recalculateKrajeObyv, lastDisplayedRows, getRows, passingFilter, draw, drawSums, drawBarCharts, drawMap, formatNumber, x$, $selectSkupina, skupina, y$, z$, $selectPohlavi, filters, changeFilter;
     hospitalizace = arg$[0], diagnozy_raw = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3], kraje_geojson = arg$[4], obyvatele = arg$[5];
     kraje = {};
     for (i$ = 0, len$ = kraje_raw.length; i$ < len$; ++i$) {
@@ -88,16 +88,26 @@
       record.nazev = diagnozy[record.kod];
     }
     recalculateKrajeObyv = function(){
-      var i$, ref$, len$, ref1$, rok, pohlavi, vek, kraj, pocet, results$ = [];
+      var krajId, ref$, kraj, i$, len$, record, rok, pohlavi, vek, pocet, results$ = [];
+      for (krajId in ref$ = kraje) {
+        kraj = ref$[krajId];
+        kraj.obyvateleAverage = 0;
+      }
       for (i$ = 0, len$ = (ref$ = obyvatele).length; i$ < len$; ++i$) {
-        ref1$ = ref$[i$], rok = ref1$.rok, pohlavi = ref1$.pohlavi, vek = ref1$.vek, kraj = ref1$.kraj, pocet = ref1$.pocet;
-        results$.push(kraje[kraj].obyvateleAverage += pocet / numOfYears);
+        record = ref$[i$], rok = record.rok, pohlavi = record.pohlavi, vek = record.vek, kraj = record.kraj, pocet = record.pocet;
+        if (passingFilter(record)) {
+          results$.push(kraje[kraj].obyvateleAverage += pocet / numOfYears);
+        }
       }
       return results$;
     };
+    lastDisplayedRows = null;
     getRows = function(skupinaId){
       var currentHospitalizaceIndex, rows, kodyPresent;
-      skupinaId == null && (skupinaId = null);
+      if (skupinaId === void 8) {
+        skupinaId = lastDisplayedRows;
+      }
+      lastDisplayedRows = skupinaId;
       currentHospitalizaceIndex = 0;
       rows = !skupinaId
         ? skupiny
@@ -144,6 +154,9 @@
             }
           }
           foundSomething = true;
+          if (!passingFilter(row)) {
+            continue;
+          }
           sum += row.pocetHospitalizovanych;
           sumYears[row.rok] += row.pocetHospitalizovanych;
           sumKraje[row.kraj] += row.pocetHospitalizovanych;
@@ -177,6 +190,12 @@
         }
         return mappedData;
       });
+    };
+    passingFilter = function(record){
+      if (filters.pohlavi && record.pohlavi !== filters.pohlavi) {
+        return false;
+      }
+      return true;
     };
     draw = function(rowsData){
       var sums, container, rows, x$;
@@ -347,7 +366,18 @@
       y$ = $("<option value='" + skupina.kod + "'>" + skupina.nazev + "</option>");
       y$.appendTo($selectSkupina);
     }
+    z$ = $selectPohlavi = $("<select><option value='muz'>Muži</option><option value='zena'>Ženy</option></select>");
+    z$.appendTo(".selectionRow");
+    z$.on('change', function(){
+      return changeFilter("pohlavi", this.value);
+    });
+    filters = {};
+    changeFilter = function(field, value){
+      filters[field] = value;
+      recalculateKrajeObyv();
+      return draw(getRows(void 8));
+    };
     recalculateKrajeObyv();
-    return draw(getRows());
+    return draw(getRows(null));
   });
 }).call(this);

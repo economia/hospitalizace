@@ -58,10 +58,16 @@ for record in hospitalizace
 
 
 recalculateKrajeObyv = ->
-    for {rok, pohlavi, vek, kraj, pocet} in obyvatele
-        kraje[kraj].obyvateleAverage += pocet / numOfYears
-
-getRows = (skupinaId = null) ->
+    for krajId, kraj of kraje
+        kraj.obyvateleAverage = 0
+    for {rok, pohlavi, vek, kraj, pocet}:record in obyvatele
+        if passingFilter record
+            kraje[kraj].obyvateleAverage += pocet / numOfYears
+lastDisplayedRows = null
+getRows = (skupinaId) ->
+    if skupinaId is void
+        skupinaId = lastDisplayedRows
+    lastDisplayedRows := skupinaId
     currentHospitalizaceIndex = 0
     rows = if not skupinaId
         skupiny
@@ -101,6 +107,7 @@ getRows = (skupinaId = null) ->
                 else
                     continue
             foundSomething = yes
+            continue if not passingFilter row
             sum += row.pocetHospitalizovanych
             sumYears[row.rok] += row.pocetHospitalizovanych
             sumKraje[row.kraj] += row.pocetHospitalizovanych
@@ -116,7 +123,10 @@ getRows = (skupinaId = null) ->
         if not skupinaId
             mappedData.skupinaId = record.kod
         mappedData
-
+passingFilter = (record) ->
+    if filters.pohlavi and record.pohlavi isnt filters.pohlavi
+        return false
+    return true
 draw = (rowsData) ->
     rowsData.sort (a, b) -> b.sum - a.sum
     sums = rowsData.map (.sum)
@@ -251,6 +261,19 @@ for skupina in skupiny
     $ "<option value='#{skupina.kod}'>#{skupina.nazev}</option>"
         ..appendTo $selectSkupina
 
+$selectPohlavi = $ "<select>
+<option value='muz'>Muži</option>
+<option value='zena'>Ženy</option>
+</select>"
+    ..appendTo ".selectionRow"
+    ..on \change ->
+        changeFilter "pohlavi" @value
+
+filters = {}
+changeFilter = (field, value) ->
+    filters[field] = value
+    recalculateKrajeObyv!
+    draw getRows void
 
 recalculateKrajeObyv!
-draw getRows!
+draw getRows null
