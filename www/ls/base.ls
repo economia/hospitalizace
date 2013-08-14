@@ -12,6 +12,13 @@ loadHospitalizace = (cb) ->
             hosp: +row.HOSP
     cb err, data
 
-(err, [hospitalizace]) <~ async.parallel [loadHospitalizace]
-console.log hospitalizace
+loadDiagnozy = (cb) ->
+    (err, data) <~ d3.csv "../diagnozy.csv"
+    cb err, data
+loadSkupiny = (cb) ->
+    (err, data) <~ d3.csv "../skupiny.csv"
+    cb err, data
+
+(err, [hospitalizace, diagnozy, skupiny]) <~ async.parallel [loadHospitalizace, loadDiagnozy, loadSkupiny]
+console.log skupiny
 

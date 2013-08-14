@@ -1,5 +1,5 @@
 (function(){
-  var loadHospitalizace, this$ = this;
+  var loadHospitalizace, loadDiagnozy, loadSkupiny, this$ = this;
   d3.selectAll(".fallback").remove();
   loadHospitalizace = function(cb){
     var ssv, this$ = this;
@@ -17,9 +17,21 @@
       return cb(err, data);
     });
   };
-  async.parallel([loadHospitalizace], function(err, arg$){
-    var hospitalizace;
-    hospitalizace = arg$[0];
-    return console.log(hospitalizace);
+  loadDiagnozy = function(cb){
+    var this$ = this;
+    return d3.csv("../diagnozy.csv", function(err, data){
+      return cb(err, data);
+    });
+  };
+  loadSkupiny = function(cb){
+    var this$ = this;
+    return d3.csv("../skupiny.csv", function(err, data){
+      return cb(err, data);
+    });
+  };
+  async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny], function(err, arg$){
+    var hospitalizace, diagnozy, skupiny;
+    hospitalizace = arg$[0], diagnozy = arg$[1], skupiny = arg$[2];
+    return console.log(skupiny);
   });
 }).call(this);
