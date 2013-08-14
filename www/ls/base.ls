@@ -102,9 +102,15 @@ drawBarCharts = (rows, rowsData) ->
         .enter!
         .append \div
             ..attr \class \year
+            ..attr \data-tooltip (data) -> "#{formatNumber data.count} hospitalizací"
             ..style \width "#{columnWidth}px"
             ..style \left (data, index) -> "#{index*columnWidth}px"
             ..style \height (yearData, yearIndex, rowIndex) ->
                 "#{scale yearData.count}px"
+formatNumber = (num) ->
+    num .= toString!
+    if num.length > 3
+        num = "#{num.substr 0, num.length - 3} #{num.substr -3}"
+    num
 
 draw getRowsBySkupiny!

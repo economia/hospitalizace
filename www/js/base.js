@@ -42,7 +42,7 @@
     });
   };
   async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje], function(err, arg$){
-    var hospitalizace, diagnozy, skupiny, kraje_raw, kraje, i$, len$, ref$, id, nazev, getRowsBySkupiny, draw, drawSums, drawBarCharts;
+    var hospitalizace, diagnozy, skupiny, kraje_raw, kraje, i$, len$, ref$, id, nazev, getRowsBySkupiny, draw, drawSums, drawBarCharts, formatNumber;
     hospitalizace = arg$[0], diagnozy = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3];
     kraje = {};
     for (i$ = 0, len$ = kraje_raw.length; i$ < len$; ++i$) {
@@ -149,6 +149,9 @@
         return it.sumYears;
       }).enter().append('div');
       y$.attr('class', 'year');
+      y$.attr('data-tooltip', function(data){
+        return formatNumber(data.count) + " hospitalizací";
+      });
       y$.style('width', columnWidth + "px");
       y$.style('left', function(data, index){
         return index * columnWidth + "px";
@@ -157,6 +160,13 @@
         return scale(yearData.count) + "px";
       });
       return y$;
+    };
+    formatNumber = function(num){
+      num = num.toString();
+      if (num.length > 3) {
+        num = num.substr(0, num.length - 3) + " " + num.substr(-3);
+      }
+      return num;
     };
     return draw(getRowsBySkupiny());
   });
