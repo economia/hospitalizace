@@ -37,19 +37,32 @@
       var currentHospitalizaceIndex, rows;
       currentHospitalizaceIndex = 0;
       return rows = skupiny.map(function(skupina){
-        var sum, row;
+        var sum, sumYears, row, key$, sumYearsArray, res$, index, count;
         sum = 0;
+        sumYears = {};
         for (;;) {
           row = hospitalizace[currentHospitalizaceIndex];
           if (!row || row.skupina !== skupina.kod) {
             break;
           }
           sum += row.pocetHospitalizovanych;
+          sumYears[key$ = row.rok] == null && (sumYears[key$] = 0);
+          sumYears[row.rok] += row.pocetHospitalizovanych;
           currentHospitalizaceIndex++;
         }
+        res$ = [];
+        for (index in sumYears) {
+          count = sumYears[index];
+          res$.push({
+            year: index,
+            count: count
+          });
+        }
+        sumYearsArray = res$;
         return {
           title: skupina.nazev,
-          sum: sum
+          sum: sum,
+          sumYears: sumYearsArray
         };
       });
     };

@@ -26,14 +26,20 @@ displayBySkupiny = ->
     currentHospitalizaceIndex = 0
     rows = skupiny.map (skupina) ->
         sum = 0
+        sumYears = {}
         loop
             row = hospitalizace[currentHospitalizaceIndex]
             if !row or row.skupina != skupina.kod
                 break
             sum += row.pocetHospitalizovanych
+            sumYears[row.rok] ?= 0
+            sumYears[row.rok] += row.pocetHospitalizovanych
             currentHospitalizaceIndex++
+        sumYearsArray = for index, count of sumYears
+            year: index, count: count
         return do
             title: skupina.nazev
             sum: sum
+            sumYears: sumYearsArray
 
 console.log displayBySkupiny!
