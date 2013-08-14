@@ -70,3 +70,7 @@ body #wrap .container .row .map {
   width: 270px;
   height: 200px;
 }
+body #wrap .container .row .map path {
+  stroke: #fff;
+  stroke-width: 0.5;
+}

@@ -160,17 +160,21 @@ drawBarCharts = (rows, rowsData) ->
                     ..attr \class \popis
                     ..text -> it.year
 drawMap = (rows, rowsData) ->
-    tstMax = -Infinity
+    mapMaxValue = -Infinity
+    for {sumKraje} in rowsData
+        for {count, kraj} in sumKraje
+            value = count / kraj.obyvateleAverage
+            if value > mapMaxValue
+                mapMaxValue = value
+
     getKrajValue = (item, krajIndex, rowIndex) ->
         data = rowsData[rowIndex]
         krajSum = data.sumKraje[krajIndex]
         return 0 if not krajSum.kraj.obyvateleAverage
-        value = (krajSum?.count || 0) / (krajSum.kraj.obyvateleAverage || 1)
-        if value > tstMax
-            tstMax := value
+        value = (krajSum?.count || 0) / krajSum.kraj.obyvateleAverage
         value
     color = d3.scale.linear!
-        .domain [0 0.189/4 0.189/2 0.189/4*3 0.189]
+        .domain [0 mapMaxValue/4 mapMaxValue/2 mapMaxValue/4*3 mapMaxValue]
         .range <[#FFFFB2 #FECC5C #FD8D3C #F03B20 #BD0026]>
 
     centroid = d3.geo.centroid kraje_geojson

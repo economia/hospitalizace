@@ -235,8 +235,18 @@
       return y$;
     };
     drawMap = function(rows, rowsData){
-      var tstMax, getKrajValue, color, centroid, projection, geoPath, x$, svg, y$;
-      tstMax = -Infinity;
+      var mapMaxValue, i$, len$, sumKraje, j$, len1$, ref$, count, kraj, value, getKrajValue, color, centroid, projection, geoPath, x$, svg, y$;
+      mapMaxValue = -Infinity;
+      for (i$ = 0, len$ = rowsData.length; i$ < len$; ++i$) {
+        sumKraje = rowsData[i$].sumKraje;
+        for (j$ = 0, len1$ = sumKraje.length; j$ < len1$; ++j$) {
+          ref$ = sumKraje[j$], count = ref$.count, kraj = ref$.kraj;
+          value = count / kraj.obyvateleAverage;
+          if (value > mapMaxValue) {
+            mapMaxValue = value;
+          }
+        }
+      }
       getKrajValue = function(item, krajIndex, rowIndex){
         var data, krajSum, value;
         data = rowsData[rowIndex];
@@ -244,13 +254,10 @@
         if (!krajSum.kraj.obyvateleAverage) {
           return 0;
         }
-        value = ((krajSum != null ? krajSum.count : void 8) || 0) / (krajSum.kraj.obyvateleAverage || 1);
-        if (value > tstMax) {
-          tstMax = value;
-        }
+        value = ((krajSum != null ? krajSum.count : void 8) || 0) / krajSum.kraj.obyvateleAverage;
         return value;
       };
-      color = d3.scale.linear().domain([0, 0.189 / 4, 0.189 / 2, 0.189 / 4 * 3, 0.189]).range(['#FFFFB2', '#FECC5C', '#FD8D3C', '#F03B20', '#BD0026']);
+      color = d3.scale.linear().domain([0, mapMaxValue / 4, mapMaxValue / 2, mapMaxValue / 4 * 3, mapMaxValue]).range(['#FFFFB2', '#FECC5C', '#FD8D3C', '#F03B20', '#BD0026']);
       centroid = d3.geo.centroid(kraje_geojson);
       projection = d3.geo.mercator().center(centroid).scale(2000).translate([135, 100]);
       geoPath = d3.geo.path().projection(projection);
