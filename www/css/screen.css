@@ -54,8 +54,8 @@ body #wrap .container .row .years .year {
 body #wrap .container .row .years .year .value {
   width: 100%;
   position: absolute;
-  background: #85bee6;
   bottom: 20px;
+  background: #85bee6;
 }
 body #wrap .container .row .years .year .value .popis {
   color: #000;
@@ -66,6 +66,9 @@ body #wrap .container .row .years .year .value .popis {
   bottom: -16px;
   font-weight: bold;
 }
+body #wrap .container .row .years .year:hover .value {
+  background: #58a6dd;
+}
 body #wrap .container .row .map {
   width: 270px;
   height: 200px;
@@ -73,4 +76,7 @@ body #wrap .container .row .map {
 body #wrap .container .row .map path {
   stroke: #fff;
   stroke-width: 0.5;
+}
+body #wrap .container .row .map path:hover {
+  opacity: 0.85;
 }

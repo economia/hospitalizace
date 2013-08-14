@@ -48,8 +48,8 @@ body
                         .value
                             width 100%
                             position absolute
-                            background HNBlue
                             bottom 20px
+                            background HNBlue
                             .popis
                                 color black
                                 text-align center
@@ -58,9 +58,14 @@ body
                                 width 100%
                                 bottom -16px
                                 font-weight bold
+                        &:hover
+                            .value
+                                background darken(HNBlue, 15%)
                 .map
                     width 270px
                     height 200px
                     path
                         stroke white
                         stroke-width 0.5
+                        &:hover
+                            opacity 0.85
