@@ -65,3 +65,7 @@ body #wrap .container .row .years .year .value .popis {
   width: 100%;
   bottom: -16px;
 }
+body #wrap .container .row .map {
+  width: 270px;
+  height: 200px;
+}

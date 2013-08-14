@@ -28,10 +28,17 @@ loadKraje = (cb) ->
     (err, data) <~ d3.csv "../kraje.csv"
     cb err, data
 
-(err, [hospitalizace, diagnozy, skupiny, kraje_raw]) <~ async.parallel [loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje]
+loadGeoJsons = (cb) ->
+    (err, data) <~ d3.json "../kraje.geojson"
+    cb err, data
+
+(err, [hospitalizace, diagnozy, skupiny, kraje_raw, kraje_geojson]) <~ async.parallel [loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadGeoJsons]
 kraje = {}
 for {id, nazev} in kraje_raw
     kraje[id] = {nazev}
+for {geometry, id} in kraje_geojson.features
+    kraje[id].geometry = geometry
+
 getRowsBySkupiny = ->
     currentHospitalizaceIndex = 0
     rows = skupiny.map (skupina) ->
@@ -76,6 +83,7 @@ draw = (rowsData) ->
 
     drawSums sums, rows
     drawBarCharts rows, rowsData
+    drawMap rows, rowsData
 
 
 drawSums = (sumValues, rows) ->
@@ -122,6 +130,40 @@ drawBarCharts = (rows, rowsData) ->
                 ..append \div
                     ..attr \class \popis
                     ..text -> it.year
+drawMap = (rows, rowsData) ->
+    getKrajValue = (item, krajIndex, rowIndex) ->
+        data = rowsData[rowIndex]
+        krajSum = data.sumKraje[krajIndex]
+        krajSum?.count || 0
+    color = d3.scale.linear!
+        .domain [0 139947/4 139947/2 139947/4*3 139947]
+        .range <[#FFFFB2 #FECC5C #FD8D3C #F03B20 #BD0026]>
+
+    centroid = d3.geo.centroid kraje_geojson
+    projection = d3.geo.mercator!
+        .center centroid
+        .scale 2200
+        .translate [135 100]
+    geoPath = d3.geo.path!.projection projection
+    svg = rows.append "svg"
+        ..attr \class \map
+    svg.selectAll \path
+        .data ->
+            it.sumKraje.map ->
+                count: it.count
+                geometry: it.kraj.geometry
+                title: it.kraj.nazev
+                type: \Feature
+        .enter!.append \path
+            ..attr \d geoPath
+            ..attr \data-tooltip (item, krajIndex, rowIndex) ->
+                data = rowsData[rowIndex]
+                data = rowsData[rowIndex]
+                krajSum = data.sumKraje[krajIndex]
+                escape "#{krajSum.kraj.nazev}: <strong>#{formatNumber krajSum.count}</strong> hospitalizací"
+            ..attr \fill ->
+                color getKrajValue ...
+
 formatNumber = (num) ->
     num .= toString!
     if num.length > 3
