@@ -113,10 +113,13 @@ drawBarCharts = (rows, rowsData) ->
         .append \div
             ..attr \class \year
             ..attr \data-tooltip (data) -> "#{data.year} #{formatNumber data.count} hospitalizací"
-            ..style \width "#{columnWidth}px"
+            ..style \width "#{columnWidth-1}px"
             ..style \left (data, index) -> "#{index*columnWidth}px"
             ..style \height (yearData, yearIndex, rowIndex) ->
                 "#{scale yearData.count}px"
+            ..append \div
+                ..attr \class \popis
+                ..text -> it.year
 formatNumber = (num) ->
     num .= toString!
     if num.length > 3

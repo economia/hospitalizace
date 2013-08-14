@@ -135,7 +135,7 @@
       return x$;
     };
     drawBarCharts = function(rows, rowsData){
-      var maxValue, i$, len$, row, j$, ref$, len1$, count, x$, scale, columnWidth, y$;
+      var maxValue, i$, len$, row, j$, ref$, len1$, count, x$, scale, columnWidth, y$, z$;
       maxValue = -Infinity;
       for (i$ = 0, len$ = rowsData.length; i$ < len$; ++i$) {
         row = rowsData[i$];
@@ -166,12 +166,17 @@
       y$.attr('data-tooltip', function(data){
         return data.year + " " + formatNumber(data.count) + " hospitalizací";
       });
-      y$.style('width', columnWidth + "px");
+      y$.style('width', (columnWidth - 1) + "px");
       y$.style('left', function(data, index){
         return index * columnWidth + "px";
       });
       y$.style('height', function(yearData, yearIndex, rowIndex){
         return scale(yearData.count) + "px";
+      });
+      z$ = y$.append('div');
+      z$.attr('class', 'popis');
+      z$.text(function(it){
+        return it.year;
       });
       return y$;
     };
