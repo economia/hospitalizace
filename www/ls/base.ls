@@ -84,6 +84,7 @@ drawSums = (sumValues, rows) ->
         .range [0 lineHeight - 2*linePadding]
     rows.append "div"
         ..attr \class \sum
+        ..attr \data-tooltip -> "Průměrný roční počet hospitalizací #{formatNumber Math.round it.sum / 5}"
         ..append "div"
             ..attr \class \value
             ..style \width -> "#{scale it.sum}px"

@@ -124,6 +124,9 @@
       scale = d3.scale.sqrt().domain([0, sumValues[0]]).range([0, lineHeight - 2 * linePadding]);
       x$ = rows.append("div");
       x$.attr('class', 'sum');
+      x$.attr('data-tooltip', function(it){
+        return "Průměrný roční počet hospitalizací " + formatNumber(Math.round(it.sum / 5));
+      });
       y$ = x$.append("div");
       y$.attr('class', 'value');
       y$.style('width', function(it){
