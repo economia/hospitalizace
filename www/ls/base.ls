@@ -107,11 +107,14 @@ getRows = (skupinaId = null) ->
             year: index, count: count
         sumKrajeArray = for index, count of sumKraje
             kraj: kraje[index], count: count
-        return do
+        mappedData =
             title: record.nazev
             sum: sum
             sumYears: sumYearsArray
             sumKraje: sumKrajeArray
+        if not skupinaId
+            mappedData.skupinaId = record.kod
+        mappedData
 
 draw = (rowsData) ->
     rowsData.sort (a, b) -> b.sum - a.sum
@@ -126,6 +129,7 @@ draw = (rowsData) ->
     rows
         .append "h2"
             ..text (row, index) -> "#{index+1}. #{row.title}"
+            ..on \click (row) -> draw getRows row.skupinaId
 
     drawSums sums, rows
     drawBarCharts rows, rowsData

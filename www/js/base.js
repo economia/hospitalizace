@@ -110,7 +110,7 @@
           }
         }));
       return rows.map(function(record){
-        var sum, sumYears, sumKraje, id, foundSomething, row, isValidRow, sumYearsArray, res$, index, count, sumKrajeArray;
+        var sum, sumYears, sumKraje, id, foundSomething, row, isValidRow, sumYearsArray, res$, index, count, sumKrajeArray, mappedData;
         sum = 0;
         sumYears = {
           "2007": 0,
@@ -166,12 +166,16 @@
           });
         }
         sumKrajeArray = res$;
-        return {
+        mappedData = {
           title: record.nazev,
           sum: sum,
           sumYears: sumYearsArray,
           sumKraje: sumKrajeArray
         };
+        if (!skupinaId) {
+          mappedData.skupinaId = record.kod;
+        }
+        return mappedData;
       });
     };
     draw = function(rowsData){
@@ -188,6 +192,9 @@
       x$ = rows.append("h2");
       x$.text(function(row, index){
         return (index + 1) + ". " + row.title;
+      });
+      x$.on('click', function(row){
+        return draw(getRows(row.skupinaId));
       });
       drawSums(sums, rows);
       drawBarCharts(rows, rowsData);
