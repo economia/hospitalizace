@@ -89,14 +89,26 @@ draw = (rowsData) ->
 drawSums = (sumValues, rows) ->
     scale = d3.scale.sqrt!
         .domain [0 sumValues[0]]
-        .range [0 lineHeight - 2*linePadding]
+        .range [1 5]
+    heightScale = d3.scale.sqrt!
+        .domain [0 sumValues[0]]
+        .range [30 110]
     rows.append "div"
         ..attr \class \sum
         ..attr \data-tooltip -> escape "Průměrně <strong>#{formatNumber Math.round it.sum / 5}</strong> hospitalizací ročně"
-        ..append "div"
-            ..attr \class \value
-            ..style \width -> "#{scale it.sum}px"
-            ..style \height -> "#{scale it.sum}px"
+        ..append \div
+            ..attr \class \valueContainer
+            ..append "span"
+                ..attr \class \value
+                ..text ->
+                    if it.sum > 1000
+                        "#{Math.round it.sum / 5000}"
+                    else
+                        "méně než"
+                ..style \font-size -> "#{scale it.sum}em"
+            ..append \span
+                ..html "<br />tisíc hospitalizací"
+            ..style \height -> "#{heightScale it.sum}px"
 
 drawBarCharts = (rows, rowsData) ->
     maxValue = -Infinity
@@ -106,7 +118,7 @@ drawBarCharts = (rows, rowsData) ->
 
     scale = d3.scale.linear!
         ..domain [0 maxValue]
-        ..range [1 lineHeight - 2*linePadding]
+        ..range [1 lineHeight - 3*linePadding]
     columnWidth = barChartWidth / numOfYears
     rows.append "div"
         .attr \class \years
@@ -142,7 +154,7 @@ drawMap = (rows, rowsData) ->
     centroid = d3.geo.centroid kraje_geojson
     projection = d3.geo.mercator!
         .center centroid
-        .scale 2200
+        .scale 2000
         .translate [135 100]
     geoPath = d3.geo.path!.projection projection
     svg = rows.append "svg"

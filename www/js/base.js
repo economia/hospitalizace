@@ -131,20 +131,32 @@
       return drawMap(rows, rowsData);
     };
     drawSums = function(sumValues, rows){
-      var scale, x$, y$;
-      scale = d3.scale.sqrt().domain([0, sumValues[0]]).range([0, lineHeight - 2 * linePadding]);
+      var scale, heightScale, x$, y$, z$, z1$;
+      scale = d3.scale.sqrt().domain([0, sumValues[0]]).range([1, 5]);
+      heightScale = d3.scale.sqrt().domain([0, sumValues[0]]).range([30, 110]);
       x$ = rows.append("div");
       x$.attr('class', 'sum');
       x$.attr('data-tooltip', function(it){
         return escape("Průměrně <strong>" + formatNumber(Math.round(it.sum / 5)) + "</strong> hospitalizací ročně");
       });
-      y$ = x$.append("div");
-      y$.attr('class', 'value');
-      y$.style('width', function(it){
-        return scale(it.sum) + "px";
+      y$ = x$.append('div');
+      y$.attr('class', 'valueContainer');
+      z$ = y$.append("span");
+      z$.attr('class', 'value');
+      z$.text(function(it){
+        if (it.sum > 1000) {
+          return Math.round(it.sum / 5000) + "";
+        } else {
+          return "méně než";
+        }
       });
+      z$.style('font-size', function(it){
+        return scale(it.sum) + "em";
+      });
+      z1$ = y$.append('span');
+      z1$.html("<br />tisíc hospitalizací");
       y$.style('height', function(it){
-        return scale(it.sum) + "px";
+        return heightScale(it.sum) + "px";
       });
       return x$;
     };
@@ -162,7 +174,7 @@
       }
       x$ = scale = d3.scale.linear();
       x$.domain([0, maxValue]);
-      x$.range([1, lineHeight - 2 * linePadding]);
+      x$.range([1, lineHeight - 3 * linePadding]);
       columnWidth = barChartWidth / numOfYears;
       y$ = rows.append("div").attr('class', 'years').style('bottom', function(data){
         var values, max, bottom;
@@ -205,7 +217,7 @@
       };
       color = d3.scale.linear().domain([0, 139947 / 4, 139947 / 2, 139947 / 4 * 3, 139947]).range(['#FFFFB2', '#FECC5C', '#FD8D3C', '#F03B20', '#BD0026']);
       centroid = d3.geo.centroid(kraje_geojson);
-      projection = d3.geo.mercator().center(centroid).scale(2200).translate([135, 100]);
+      projection = d3.geo.mercator().center(centroid).scale(2000).translate([135, 100]);
       geoPath = d3.geo.path().projection(projection);
       x$ = svg = rows.append("svg");
       x$.attr('class', 'map');
