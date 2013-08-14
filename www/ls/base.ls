@@ -43,21 +43,37 @@ loadGeoJsons = (cb) ->
     (err, data) <~ d3.json "../kraje.geojson"
     cb err, data
 
-(err, [hospitalizace, diagnozy, skupiny, kraje_raw, kraje_geojson, obyvatele]) <~ async.parallel [loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadGeoJsons, loadObyvatele]
+(err, [hospitalizace, diagnozy_raw, skupiny, kraje_raw, kraje_geojson, obyvatele]) <~ async.parallel [loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadGeoJsons, loadObyvatele]
 kraje = {}
 for {id, nazev} in kraje_raw
     obyvateleAverage = 0
     kraje[id] = {nazev, obyvateleAverage}
 for {geometry, id} in kraje_geojson.features
     kraje[id].geometry = geometry
+diagnozy = {}
+for {kod, nazev} in diagnozy_raw
+    diagnozy[kod] = nazev
+for record in hospitalizace
+    record.nazev = diagnozy[record.kod]
 
 recalculateKrajeObyv = ->
     for {rok, pohlavi, vek, kraj, pocet} in obyvatele
         kraje[kraj].obyvateleAverage += pocet / numOfYears
 
-getRowsBySkupiny = ->
+getRows = (skupinaId = null) ->
     currentHospitalizaceIndex = 0
-    rows = skupiny.map (skupina) ->
+    rows = if not skupinaId
+        skupiny
+    else
+        kodyPresent = {}
+        hospitalizace.filter ->
+            if !kodyPresent[it.kod] and it.skupina == skupinaId
+                kodyPresent[it.kod] = yes
+                yes
+            else
+                no
+
+    rows.map (record) ->
         sum = 0
         sumYears =
             "2007": 0
@@ -68,27 +84,40 @@ getRowsBySkupiny = ->
         sumKraje = {}
         for id of kraje
             sumKraje[id] = 0
+        foundSomething = no
         loop
             row = hospitalizace[currentHospitalizaceIndex]
-            if !row or row.skupina != skupina.kod
-                break
+            currentHospitalizaceIndex++
+            break if currentHospitalizaceIndex > 1000000
+            break if !row
+            isValidRow = if not skupinaId
+                row.skupina == record.kod
+            else
+                row.kod == record.kod
+            if not isValidRow
+                if foundSomething
+                    break
+                else
+                    continue
+            foundSomething = yes
             sum += row.pocetHospitalizovanych
             sumYears[row.rok] += row.pocetHospitalizovanych
             sumKraje[row.kraj] += row.pocetHospitalizovanych
-            currentHospitalizaceIndex++
         sumYearsArray = for index, count of sumYears
             year: index, count: count
         sumKrajeArray = for index, count of sumKraje
             kraj: kraje[index], count: count
         return do
-            title: skupina.nazev
+            title: record.nazev
             sum: sum
             sumYears: sumYearsArray
             sumKraje: sumKrajeArray
+
 draw = (rowsData) ->
     rowsData.sort (a, b) -> b.sum - a.sum
     sums = rowsData.map (.sum)
     container = d3.select ".container"
+    container.selectAll "*" .remove!
     rows = container
         .selectAll ".row"
         .data rowsData
@@ -210,4 +239,4 @@ formatNumber = (num) ->
     num
 
 recalculateKrajeObyv!
-draw getRowsBySkupiny!
+draw getRows!

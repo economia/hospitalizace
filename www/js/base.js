@@ -63,8 +63,8 @@
     });
   };
   async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadGeoJsons, loadObyvatele], function(err, arg$){
-    var hospitalizace, diagnozy, skupiny, kraje_raw, kraje_geojson, obyvatele, kraje, i$, len$, ref$, id, nazev, obyvateleAverage, ref1$, geometry, recalculateKrajeObyv, getRowsBySkupiny, draw, drawSums, drawBarCharts, drawMap, formatNumber;
-    hospitalizace = arg$[0], diagnozy = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3], kraje_geojson = arg$[4], obyvatele = arg$[5];
+    var hospitalizace, diagnozy_raw, skupiny, kraje_raw, kraje_geojson, obyvatele, kraje, i$, len$, ref$, id, nazev, obyvateleAverage, ref1$, geometry, diagnozy, kod, record, recalculateKrajeObyv, getRows, draw, drawSums, drawBarCharts, drawMap, formatNumber;
+    hospitalizace = arg$[0], diagnozy_raw = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3], kraje_geojson = arg$[4], obyvatele = arg$[5];
     kraje = {};
     for (i$ = 0, len$ = kraje_raw.length; i$ < len$; ++i$) {
       ref$ = kraje_raw[i$], id = ref$.id, nazev = ref$.nazev;
@@ -78,6 +78,15 @@
       ref1$ = ref$[i$], geometry = ref1$.geometry, id = ref1$.id;
       kraje[id].geometry = geometry;
     }
+    diagnozy = {};
+    for (i$ = 0, len$ = diagnozy_raw.length; i$ < len$; ++i$) {
+      ref$ = diagnozy_raw[i$], kod = ref$.kod, nazev = ref$.nazev;
+      diagnozy[kod] = nazev;
+    }
+    for (i$ = 0, len$ = hospitalizace.length; i$ < len$; ++i$) {
+      record = hospitalizace[i$];
+      record.nazev = diagnozy[record.kod];
+    }
     recalculateKrajeObyv = function(){
       var i$, ref$, len$, ref1$, rok, pohlavi, vek, kraj, pocet, results$ = [];
       for (i$ = 0, len$ = (ref$ = obyvatele).length; i$ < len$; ++i$) {
@@ -86,11 +95,22 @@
       }
       return results$;
     };
-    getRowsBySkupiny = function(){
-      var currentHospitalizaceIndex, rows;
+    getRows = function(skupinaId){
+      var currentHospitalizaceIndex, rows, kodyPresent;
+      skupinaId == null && (skupinaId = null);
       currentHospitalizaceIndex = 0;
-      return rows = skupiny.map(function(skupina){
-        var sum, sumYears, sumKraje, id, row, sumYearsArray, res$, index, count, sumKrajeArray;
+      rows = !skupinaId
+        ? skupiny
+        : (kodyPresent = {}, hospitalizace.filter(function(it){
+          if (!kodyPresent[it.kod] && it.skupina === skupinaId) {
+            kodyPresent[it.kod] = true;
+            return true;
+          } else {
+            return false;
+          }
+        }));
+      return rows.map(function(record){
+        var sum, sumYears, sumKraje, id, foundSomething, row, isValidRow, sumYearsArray, res$, index, count, sumKrajeArray;
         sum = 0;
         sumYears = {
           "2007": 0,
@@ -103,15 +123,30 @@
         for (id in kraje) {
           sumKraje[id] = 0;
         }
+        foundSomething = false;
         for (;;) {
           row = hospitalizace[currentHospitalizaceIndex];
-          if (!row || row.skupina !== skupina.kod) {
+          currentHospitalizaceIndex++;
+          if (currentHospitalizaceIndex > 1000000) {
             break;
           }
+          if (!row) {
+            break;
+          }
+          isValidRow = !skupinaId
+            ? row.skupina === record.kod
+            : row.kod === record.kod;
+          if (!isValidRow) {
+            if (foundSomething) {
+              break;
+            } else {
+              continue;
+            }
+          }
+          foundSomething = true;
           sum += row.pocetHospitalizovanych;
           sumYears[row.rok] += row.pocetHospitalizovanych;
           sumKraje[row.kraj] += row.pocetHospitalizovanych;
-          currentHospitalizaceIndex++;
         }
         res$ = [];
         for (index in sumYears) {
@@ -132,7 +167,7 @@
         }
         sumKrajeArray = res$;
         return {
-          title: skupina.nazev,
+          title: record.nazev,
           sum: sum,
           sumYears: sumYearsArray,
           sumKraje: sumKrajeArray
@@ -148,6 +183,7 @@
         return it.sum;
       });
       container = d3.select(".container");
+      container.selectAll("*").remove();
       rows = container.selectAll(".row").data(rowsData).enter().append("div").attr('class', 'row');
       x$ = rows.append("h2");
       x$.text(function(row, index){
@@ -295,6 +331,6 @@
       return num;
     };
     recalculateKrajeObyv();
-    return draw(getRowsBySkupiny());
+    return draw(getRows());
   });
 }).call(this);
