@@ -65,7 +65,7 @@ draw = (rows) ->
             .attr \class \row
     rows
         .append "h2"
-            ..text -> it.title
+            ..text (row, index) -> "#{index+1}. #{row.title}"
 
     drawSums sums, rows
 

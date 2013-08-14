@@ -105,8 +105,8 @@
       container = d3.select(".container");
       rows = container.selectAll(".row").data(rows).enter().append("div").attr('class', 'row');
       x$ = rows.append("h2");
-      x$.text(function(it){
-        return it.title;
+      x$.text(function(row, index){
+        return (index + 1) + ". " + row.title;
       });
       return drawSums(sums, rows);
     };
