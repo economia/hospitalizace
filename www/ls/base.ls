@@ -36,14 +36,18 @@ getRowsBySkupiny = ->
     currentHospitalizaceIndex = 0
     rows = skupiny.map (skupina) ->
         sum = 0
-        sumYears = {}
+        sumYears =
+            "2007": 0
+            "2008": 0
+            "2009": 0
+            "2010": 0
+            "2011": 0
         sumKraje = {}
         loop
             row = hospitalizace[currentHospitalizaceIndex]
             if !row or row.skupina != skupina.kod
                 break
             sum += row.pocetHospitalizovanych
-            sumYears[row.rok] ?= 0
             sumYears[row.rok] += row.pocetHospitalizovanych
             sumKraje[row.kraj] ?= 0
             sumKraje[row.kraj] += row.pocetHospitalizovanych
@@ -93,16 +97,22 @@ drawBarCharts = (rows, rowsData) ->
 
     scale = d3.scale.linear!
         ..domain [0 maxValue]
-        ..range [0 lineHeight - linePadding]
+        ..range [1 lineHeight - 2*linePadding]
     columnWidth = barChartWidth / numOfYears
     rows.append "div"
         .attr \class \years
+        .style \bottom (data) ->
+            values = data.sumYears.map (.count)
+            max = scale Math.max ...values
+            bottom = ((lineHeight - 2*linePadding) - max) / 2
+            console.log bottom
+            "#{bottom}px"
         .selectAll ".year"
         .data -> it.sumYears
         .enter!
         .append \div
             ..attr \class \year
-            ..attr \data-tooltip (data) -> "#{formatNumber data.count} hospitalizací"
+            ..attr \data-tooltip (data) -> "#{data.year} #{formatNumber data.count} hospitalizací"
             ..style \width "#{columnWidth}px"
             ..style \left (data, index) -> "#{index*columnWidth}px"
             ..style \height (yearData, yearIndex, rowIndex) ->

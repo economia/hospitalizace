@@ -12,7 +12,6 @@ body #wrap .container .row {
   float: left;
   height: 200px;
   width: 100%;
-  border-bottom: 1px solid #999;
 }
 body #wrap .container .row h2 {
   font-size: 1em;
@@ -24,8 +23,6 @@ body #wrap .container .row h2 {
 }
 body #wrap .container .row .sum {
   position: relative;
-  border-right: 1px solid #999;
-  border-left: 1px solid #999;
   width: 200px;
   height: 200px;
   float: left;
@@ -42,7 +39,6 @@ body #wrap .container .row .sum .value {
 }
 body #wrap .container .row .years {
   position: relative;
-  border-right: 1px solid #999;
   width: 200px;
   height: 200px;
   float: left;
@@ -51,6 +47,6 @@ body #wrap .container .row .years .year {
   float: left;
   height: 50px;
   position: absolute;
-  bottom: 0px;
+  bottom: 20px;
   background: #00f;
 }

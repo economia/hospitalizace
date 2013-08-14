@@ -57,7 +57,13 @@
       return rows = skupiny.map(function(skupina){
         var sum, sumYears, sumKraje, row, key$, sumYearsArray, res$, index, count, sumKrajeArray;
         sum = 0;
-        sumYears = {};
+        sumYears = {
+          "2007": 0,
+          "2008": 0,
+          "2009": 0,
+          "2010": 0,
+          "2011": 0
+        };
         sumKraje = {};
         for (;;) {
           row = hospitalizace[currentHospitalizaceIndex];
@@ -65,7 +71,6 @@
             break;
           }
           sum += row.pocetHospitalizovanych;
-          sumYears[key$ = row.rok] == null && (sumYears[key$] = 0);
           sumYears[row.rok] += row.pocetHospitalizovanych;
           sumKraje[key$ = row.kraj] == null && (sumKraje[key$] = 0);
           sumKraje[row.kraj] += row.pocetHospitalizovanych;
@@ -143,14 +148,23 @@
       }
       x$ = scale = d3.scale.linear();
       x$.domain([0, maxValue]);
-      x$.range([0, lineHeight - linePadding]);
+      x$.range([1, lineHeight - 2 * linePadding]);
       columnWidth = barChartWidth / numOfYears;
-      y$ = rows.append("div").attr('class', 'years').selectAll(".year").data(function(it){
+      y$ = rows.append("div").attr('class', 'years').style('bottom', function(data){
+        var values, max, bottom;
+        values = data.sumYears.map(function(it){
+          return it.count;
+        });
+        max = scale(Math.max.apply(Math, values));
+        bottom = ((lineHeight - 2 * linePadding) - max) / 2;
+        console.log(bottom);
+        return bottom + "px";
+      }).selectAll(".year").data(function(it){
         return it.sumYears;
       }).enter().append('div');
       y$.attr('class', 'year');
       y$.attr('data-tooltip', function(data){
-        return formatNumber(data.count) + " hospitalizací";
+        return data.year + " " + formatNumber(data.count) + " hospitalizací";
       });
       y$.style('width', columnWidth + "px");
       y$.style('left', function(data, index){
