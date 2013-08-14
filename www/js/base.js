@@ -1,7 +1,9 @@
 (function(){
-  var lineHeight, linePadding, loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, this$ = this;
+  var lineHeight, linePadding, barChartWidth, numOfYears, loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, this$ = this;
   lineHeight = 200;
   linePadding = 20;
+  barChartWidth = 200;
+  numOfYears = 5;
   d3.selectAll(".fallback").remove();
   loadHospitalizace = function(cb){
     var ssv, this$ = this;
@@ -39,7 +41,7 @@
     });
   };
   async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje], function(err, arg$){
-    var hospitalizace, diagnozy, skupiny, kraje_raw, kraje, i$, len$, ref$, id, nazev, getRowsBySkupiny, draw, drawSums;
+    var hospitalizace, diagnozy, skupiny, kraje_raw, kraje, i$, len$, ref$, id, nazev, getRowsBySkupiny, draw, drawSums, drawBarCharts;
     hospitalizace = arg$[0], diagnozy = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3];
     kraje = {};
     for (i$ = 0, len$ = kraje_raw.length; i$ < len$; ++i$) {
@@ -94,21 +96,22 @@
         };
       });
     };
-    draw = function(rows){
-      var sums, container, x$;
-      rows.sort(function(a, b){
+    draw = function(rowsData){
+      var sums, container, rows, x$;
+      rowsData.sort(function(a, b){
         return b.sum - a.sum;
       });
-      sums = rows.map(function(it){
+      sums = rowsData.map(function(it){
         return it.sum;
       });
       container = d3.select(".container");
-      rows = container.selectAll(".row").data(rows).enter().append("div").attr('class', 'row');
+      rows = container.selectAll(".row").data(rowsData).enter().append("div").attr('class', 'row');
       x$ = rows.append("h2");
       x$.text(function(row, index){
         return (index + 1) + ". " + row.title;
       });
-      return drawSums(sums, rows);
+      drawSums(sums, rows);
+      return drawBarCharts(rows, rowsData);
     };
     drawSums = function(sumValues, rows){
       var scale, x$, y$;
@@ -124,6 +127,35 @@
         return scale(it.sum) + "px";
       });
       return x$;
+    };
+    drawBarCharts = function(rows, rowsData){
+      var maxValue, i$, len$, row, j$, ref$, len1$, count, x$, scale, columnWidth, y$;
+      maxValue = -Infinity;
+      for (i$ = 0, len$ = rowsData.length; i$ < len$; ++i$) {
+        row = rowsData[i$];
+        for (j$ = 0, len1$ = (ref$ = row.sumYears).length; j$ < len1$; ++j$) {
+          count = ref$[j$].count;
+          if (count > maxValue) {
+            maxValue = count;
+          }
+        }
+      }
+      x$ = scale = d3.scale.linear();
+      x$.domain([0, maxValue]);
+      x$.range([0, lineHeight - linePadding]);
+      columnWidth = barChartWidth / numOfYears;
+      y$ = rows.append("div").attr('class', 'years').selectAll(".year").data(function(it){
+        return it.sumYears;
+      }).enter().append('div');
+      y$.attr('class', 'year');
+      y$.style('width', columnWidth + "px");
+      y$.style('left', function(data, index){
+        return index * columnWidth + "px";
+      });
+      y$.style('height', function(yearData, yearIndex, rowIndex){
+        return scale(yearData.count) + "px";
+      });
+      return y$;
     };
     return draw(getRowsBySkupiny());
   });

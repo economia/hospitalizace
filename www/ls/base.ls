@@ -1,5 +1,7 @@
 lineHeight = 200
 linePadding = 20
+barChartWidth = 200
+numOfYears = 5
 d3.selectAll ".fallback" .remove!
 loadHospitalizace = (cb) ->
     ssv = d3.dsv ";" "text/csv"
@@ -54,13 +56,13 @@ getRowsBySkupiny = ->
             sum: sum
             sumYears: sumYearsArray
             sumKraje: sumKrajeArray
-draw = (rows) ->
-    rows.sort (a, b) -> b.sum - a.sum
-    sums = rows.map (.sum)
+draw = (rowsData) ->
+    rowsData.sort (a, b) -> b.sum - a.sum
+    sums = rowsData.map (.sum)
     container = d3.select ".container"
     rows = container
         .selectAll ".row"
-        .data rows
+        .data rowsData
         .enter!.append "div"
             .attr \class \row
     rows
@@ -68,6 +70,7 @@ draw = (rows) ->
             ..text (row, index) -> "#{index+1}. #{row.title}"
 
     drawSums sums, rows
+    drawBarCharts rows, rowsData
 
 
 drawSums = (sumValues, rows) ->
@@ -81,5 +84,26 @@ drawSums = (sumValues, rows) ->
             ..style \width -> "#{scale it.sum}px"
             ..style \height -> "#{scale it.sum}px"
 
+drawBarCharts = (rows, rowsData) ->
+    maxValue = -Infinity
+    for row in rowsData
+        for {count} in row.sumYears
+            if count > maxValue then maxValue = count
+
+    scale = d3.scale.linear!
+        ..domain [0 maxValue]
+        ..range [0 lineHeight - linePadding]
+    columnWidth = barChartWidth / numOfYears
+    rows.append "div"
+        .attr \class \years
+        .selectAll ".year"
+        .data -> it.sumYears
+        .enter!
+        .append \div
+            ..attr \class \year
+            ..style \width "#{columnWidth}px"
+            ..style \left (data, index) -> "#{index*columnWidth}px"
+            ..style \height (yearData, yearIndex, rowIndex) ->
+                "#{scale yearData.count}px"
 
 draw getRowsBySkupiny!
