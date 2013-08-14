@@ -27,7 +27,7 @@ loadKraje = (cb) ->
 kraje = {}
 for {id, nazev} in kraje_raw
     kraje[id] = {nazev}
-displayBySkupiny = ->
+getRowsBySkupiny = ->
     currentHospitalizaceIndex = 0
     rows = skupiny.map (skupina) ->
         sum = 0
@@ -53,4 +53,4 @@ displayBySkupiny = ->
             sumYears: sumYearsArray
             sumKraje: sumKrajeArray
 
-console.log displayBySkupiny!
+console.log getRowsBySkupiny!

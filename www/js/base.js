@@ -37,7 +37,7 @@
     });
   };
   async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje], function(err, arg$){
-    var hospitalizace, diagnozy, skupiny, kraje_raw, kraje, i$, len$, ref$, id, nazev, displayBySkupiny;
+    var hospitalizace, diagnozy, skupiny, kraje_raw, kraje, i$, len$, ref$, id, nazev, getRowsBySkupiny;
     hospitalizace = arg$[0], diagnozy = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3];
     kraje = {};
     for (i$ = 0, len$ = kraje_raw.length; i$ < len$; ++i$) {
@@ -46,7 +46,7 @@
         nazev: nazev
       };
     }
-    displayBySkupiny = function(){
+    getRowsBySkupiny = function(){
       var currentHospitalizaceIndex, rows;
       currentHospitalizaceIndex = 0;
       return rows = skupiny.map(function(skupina){
@@ -92,6 +92,6 @@
         };
       });
     };
-    return console.log(displayBySkupiny());
+    return console.log(getRowsBySkupiny());
   });
 }).call(this);
