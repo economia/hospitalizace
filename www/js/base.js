@@ -227,7 +227,7 @@
         h2.filter(function(row){
           return !in$(row.skupinaId, skupinyWithoutDetails);
         }).html(function(row, index){
-          return (index + 1) + ". <span>" + row.title + " &raquo;</span>";
+          return (index + 1) + ". <span>" + row.title + "&nbsp;&raquo;</span>";
         }).attr('class', 'link').attr('data-tooltip', "Kliknutím zobrazíte jednotlivé diagnózy").on('click', function(row){
           var x$;
           x$ = $selectSkupina;

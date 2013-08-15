@@ -153,7 +153,7 @@ draw = (rowsData) ->
     if not lastDisplayedRows
         h2
             .filter (row) -> row.skupinaId not in skupinyWithoutDetails
-            .html (row, index) -> "#{index+1}. <span>#{row.title} &raquo;</span>"
+            .html (row, index) -> "#{index+1}. <span>#{row.title}&nbsp;&raquo;</span>"
             .attr \class \link
             .attr \data-tooltip "Kliknutím zobrazíte jednotlivé diagnózy"
             .on \click (row) ->
