@@ -266,6 +266,7 @@ formatNumber = (num) ->
 
 $selectSkupina = $ "<select data-placeholder='Skupina diagnóz' ><option value=''></option></select>"
     ..appendTo ".selectionRow .skupina"
+$selectSkupina = $ ".selectionRow .skupina select"
     ..on \change ->
         draw getRows @value
 for skupina in skupiny
@@ -280,6 +281,7 @@ $selectPohlavi = $ "<select data-placeholder='pohlaví'>
 <option value='zena'>Ženy</option>
 </select>"
     ..appendTo ".selectionRow .pohlavi"
+$selectPohlavi = $ ".selectionRow .pohlavi select"
     ..on \change ->
         changeFilter "pohlavi" @value
     ..chosen allow_single_deselect: true
@@ -294,6 +296,7 @@ $selectVek = $ "<select data-placeholder='věk'>
 <option value='75+'>75+</option>
 </select>"
     ..appendTo ".selectionRow .vek"
+$selectVek = $ ".selectionRow .vek select"
     ..on \change -> changeFilter \vek @value
     ..chosen allow_single_deselect: true
 
