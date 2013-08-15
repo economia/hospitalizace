@@ -276,7 +276,7 @@
       return x$;
     };
     drawBarCharts = function(rows, rowsData){
-      var maxValue, i$, len$, row, j$, ref$, len1$, count, x$, scale, columnWidth, y$, z$, z1$;
+      var maxValue, i$, len$, row, j$, ref$, len1$, count, x$, scale, maxHeight, columnWidth, y$, z$, z1$;
       maxValue = -Infinity;
       for (i$ = 0, len$ = rowsData.length; i$ < len$; ++i$) {
         row = rowsData[i$];
@@ -290,15 +290,20 @@
       x$ = scale = d3.scale.linear();
       x$.domain([0, maxValue]);
       x$.range([1, lineHeight - 3 * linePadding]);
+      maxHeight = scale.range[1];
       columnWidth = barChartWidth / numOfYears;
-      y$ = rows.append("div").attr('class', 'years').style('bottom', function(data){
+      y$ = rows.append("div").attr('class', 'years').each(function(data){
         var values, max, bottom;
         values = data.sumYears.map(function(it){
           return it.count;
         });
         max = scale(Math.max.apply(Math, values));
         bottom = ((lineHeight - 2 * linePadding) - max) / 2;
-        return bottom + "px";
+        return data._bottom = bottom;
+      }).style('top', function(data){
+        return data._bottom + "px";
+      }).style('height', function(data){
+        return (lineHeight - 2 * data._bottom) + "px";
       }).selectAll(".year").data(function(it){
         return it.sumYears;
       }).enter().append('div');

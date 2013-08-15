@@ -102,12 +102,11 @@ body #wrap .container .row .sum .valueContainer {
 body #wrap .container .row .years {
   position: relative;
   width: 200px;
-  height: 200px;
   float: left;
 }
 body #wrap .container .row .years .year {
   position: absolute;
-  height: 200px;
+  height: 100%;
   bottom: 0px;
 }
 body #wrap .container .row .years .year .value {

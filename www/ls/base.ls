@@ -204,14 +204,17 @@ drawBarCharts = (rows, rowsData) ->
     scale = d3.scale.linear!
         ..domain [0 maxValue]
         ..range [1 lineHeight - 3*linePadding]
+    maxHeight = scale.range.1
     columnWidth = barChartWidth / numOfYears
     rows.append "div"
         .attr \class \years
-        .style \bottom (data) ->
+        .each (data) ->
             values = data.sumYears.map (.count)
             max = scale Math.max ...values
             bottom = ((lineHeight - 2*linePadding) - max) / 2
-            "#{bottom}px"
+            data._bottom = bottom
+        .style \top (data) -> "#{data._bottom}px"
+        .style \height (data) -> "#{lineHeight - 2*data._bottom}px"
         .selectAll ".year"
         .data -> it.sumYears
         .enter!
