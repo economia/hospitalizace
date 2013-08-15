@@ -1,5 +1,7 @@
 (function(){
-  var lineHeight, linePadding, barChartWidth, numOfYears, skupinyWithoutDetails, loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadObyvatele, loadGeoJsons, this$ = this;
+  var x$, iframe, lineHeight, linePadding, barChartWidth, numOfYears, skupinyWithoutDetails, loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadObyvatele, loadGeoJsons, this$ = this;
+  x$ = iframe = responsiveIframe();
+  x$.allowResponsiveEmbedding();
   lineHeight = 200;
   linePadding = 20;
   barChartWidth = 170;
@@ -236,7 +238,8 @@
       }
       drawSums(sums, rows);
       drawBarCharts(rows, rowsData);
-      return drawMap(rows, rowsData);
+      drawMap(rows, rowsData);
+      return iframe.messageParent(1, '#content', 50);
     };
     drawSums = function(sumValues, rows){
       var scale, heightScale, x$, y$, z$, z1$;

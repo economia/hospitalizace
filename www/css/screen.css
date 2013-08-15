@@ -13,12 +13,18 @@ body .hiddenIfIncapableBrowser {
   top: -5000px;
   left: -5000px;
 }
+body #content {
+  float: left;
+}
 body #wrap {
   width: 670px;
 }
 body #wrap .selectionRow {
   float: left;
   margin-bottom: 10px;
+}
+body #wrap .selectionRow.bottom {
+  margin-bottom: 0px;
 }
 body #wrap .selectionRow .back {
   display: block;

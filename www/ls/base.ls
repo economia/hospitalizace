@@ -1,3 +1,5 @@
+iframe = responsiveIframe!
+    ..allowResponsiveEmbedding!
 lineHeight = 200
 linePadding = 20
 barChartWidth = 170
@@ -163,6 +165,7 @@ draw = (rowsData) ->
     drawSums sums, rows
     drawBarCharts rows, rowsData
     drawMap rows, rowsData
+    iframe.messageParent 1, '#content', 50
 
 
 drawSums = (sumValues, rows) ->
