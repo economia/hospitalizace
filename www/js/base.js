@@ -113,6 +113,9 @@
     lastDisplayedRows = null;
     getRows = function(skupinaId){
       var currentHospitalizaceIndex, rows, kodyPresent;
+      if (skupinaId !== lastDisplayedRows) {
+        _gaq.push(['_trackEvent', 'hospitalizace', 'skupina', skupinaId + ""]);
+      }
       if (skupinaId === void 8) {
         skupinaId = lastDisplayedRows;
       }
@@ -439,7 +442,8 @@
       filters[field] = value;
       checkBackButton();
       recalculateKrajeObyv();
-      return draw(getRows(void 8));
+      draw(getRows(void 8));
+      return _gaq.push(['_trackEvent', 'hospitalizace', 'filter', field + "-" + value]);
     };
     $(".selectionRow .back a").click(function(evt){
       var x$;

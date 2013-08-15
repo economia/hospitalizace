@@ -73,6 +73,8 @@ recalculateKrajeObyv = ->
             kraje[kraj].obyvateleAverage += pocet / numOfYears
 lastDisplayedRows = null
 getRows = (skupinaId) ->
+    if skupinaId isnt lastDisplayedRows
+        _gaq.push ['_trackEvent' 'hospitalizace' 'skupina' "#skupinaId"]
     if skupinaId is void
         skupinaId = lastDisplayedRows
     lastDisplayedRows := skupinaId
@@ -333,6 +335,7 @@ changeFilter = (field, value) ->
     checkBackButton!
     recalculateKrajeObyv!
     draw getRows void
+    _gaq.push ['_trackEvent' 'hospitalizace' 'filter' "#field-#value"]
 $ ".selectionRow .back a" .click (evt) ->
     evt.preventDefault!
     filters := {}
