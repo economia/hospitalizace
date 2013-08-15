@@ -3,6 +3,7 @@ linePadding = 20
 barChartWidth = 170
 numOfYears = 5
 d3.selectAll ".fallback" .remove!
+d3.selectAll ".hiddenIfIncapableBrowser" .attr "class" ""
 skupinyWithoutDetails = []
 new Tooltip!watchElements!
 loadHospitalizace = (cb) ->
