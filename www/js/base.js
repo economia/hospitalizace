@@ -332,6 +332,9 @@
           }
         }
       }
+      if (mapMaxValue === 0) {
+        mapMaxValue = 1;
+      }
       getKrajValue = function(item, krajIndex, rowIndex){
         var data, krajSum, value;
         data = rowsData[rowIndex];

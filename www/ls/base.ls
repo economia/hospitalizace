@@ -228,6 +228,7 @@ drawMap = (rows, rowsData) ->
             value = count / kraj.obyvateleAverage
             if value > mapMaxValue
                 mapMaxValue = value
+    if mapMaxValue == 0 then mapMaxValue = 1 # fix when no hospitalizations are recorded in category
 
     getKrajValue = (item, krajIndex, rowIndex) ->
         data = rowsData[rowIndex]
