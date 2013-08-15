@@ -18,32 +18,32 @@ body #wrap .selectionRow div {
   float: left;
 }
 body #wrap .selectionRow .skupina {
-  width: 440px;
+  width: 335px;
 }
 body #wrap .selectionRow .skupina select {
-  width: 440px;
+  width: 335px;
 }
 body #wrap .selectionRow .skupina .chosen-search {
-  width: 430px;
+  width: 325px;
 }
 body #wrap .selectionRow .skupina .chosen-results {
   clear: left;
 }
 body #wrap .selectionRow .pohlavi {
-  width: 90px;
+  width: 115px;
   margin: 0px 15px;
 }
 body #wrap .selectionRow .pohlavi select {
-  width: 90px;
+  width: 115px;
 }
 body #wrap .selectionRow .pohlavi .chosen-search {
   display: none;
 }
 body #wrap .selectionRow .vek {
-  width: 90px;
+  width: 190px;
 }
 body #wrap .selectionRow .vek select {
-  width: 90px;
+  width: 190px;
 }
 body #wrap .selectionRow .vek .chosen-search {
   display: none;

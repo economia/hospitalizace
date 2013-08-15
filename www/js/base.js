@@ -370,7 +370,7 @@
       }
       return num;
     };
-    x$ = $selectSkupina = $("<select data-placeholder='Skupina diagnóz' ><option value=''></option></select>");
+    x$ = $selectSkupina = $("<select data-placeholder='Všechny druhy nemocí' ><option value=''></option></select>");
     x$.appendTo(".selectionRow .skupina");
     y$ = $selectSkupina = $(".selectionRow .skupina select");
     y$.on('change', function(){
@@ -385,7 +385,7 @@
     z1$.chosen({
       allow_single_deselect: true
     });
-    z2$ = $selectPohlavi = $("<select data-placeholder='pohlaví'><option value=''></option><option value='muz'>Muži</option><option value='zena'>Ženy</option></select>");
+    z2$ = $selectPohlavi = $("<select data-placeholder='Obě pohlaví'><option value=''></option><option value='muz'>Muži</option><option value='zena'>Ženy</option></select>");
     z2$.appendTo(".selectionRow .pohlavi");
     z3$ = $selectPohlavi = $(".selectionRow .pohlavi select");
     z3$.on('change', function(){
@@ -394,7 +394,7 @@
     z3$.chosen({
       allow_single_deselect: true
     });
-    z4$ = $selectVek = $("<select data-placeholder='věk'><option value=''></option><option value='15-34'>15-34</option><option value='35-44'>35-44</option><option value='45-54'>45-54</option><option value='55-64'>55-64</option><option value='65-74'>65-74</option><option value='75+'>75+</option></select>");
+    z4$ = $selectVek = $("<select data-placeholder='Všechny věkové kategorie'><option value=''></option><option value='15-34'>15-34</option><option value='35-44'>35-44</option><option value='45-54'>45-54</option><option value='55-64'>55-64</option><option value='65-74'>65-74</option><option value='75+'>75+</option></select>");
     z4$.appendTo(".selectionRow .vek");
     z5$ = $selectVek = $(".selectionRow .vek select");
     z5$.on('change', function(){

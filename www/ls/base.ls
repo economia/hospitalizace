@@ -264,7 +264,7 @@ formatNumber = (num) ->
         num = "#{num.substr 0, num.length - 3}&nbsp;#{num.substr -3}"
     num
 
-$selectSkupina = $ "<select data-placeholder='Skupina diagnóz' ><option value=''></option></select>"
+$selectSkupina = $ "<select data-placeholder='Všechny druhy nemocí' ><option value=''></option></select>"
     ..appendTo ".selectionRow .skupina"
 $selectSkupina = $ ".selectionRow .skupina select"
     ..on \change ->
@@ -275,7 +275,7 @@ for skupina in skupiny
 $selectSkupina
     ..chosen allow_single_deselect: true
 
-$selectPohlavi = $ "<select data-placeholder='pohlaví'>
+$selectPohlavi = $ "<select data-placeholder='Obě pohlaví'>
 <option value=''></option>
 <option value='muz'>Muži</option>
 <option value='zena'>Ženy</option>
@@ -286,7 +286,7 @@ $selectPohlavi = $ ".selectionRow .pohlavi select"
         changeFilter "pohlavi" @value
     ..chosen allow_single_deselect: true
 
-$selectVek = $ "<select data-placeholder='věk'>
+$selectVek = $ "<select data-placeholder='Všechny věkové kategorie'>
 <option value=''></option>
 <option value='15-34'>15-34</option>
 <option value='35-44'>35-44</option>
