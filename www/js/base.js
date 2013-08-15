@@ -425,6 +425,17 @@
       recalculateKrajeObyv();
       return draw(getRows(void 8));
     };
+    $(".selectionRow .back a").click(function(evt){
+      var x$;
+      evt.preventDefault();
+      filters = {};
+      recalculateKrajeObyv();
+      draw(getRows(null));
+      x$ = $selectSkupina;
+      x$.val("");
+      x$.trigger("chosen:updated");
+      return x$;
+    });
     checkBackButton = function(){
       if (filters.vek || filters.pohlavi || lastDisplayedRows) {
         return $(".selectionRow .back").removeClass("disabled");

@@ -315,6 +315,14 @@ changeFilter = (field, value) ->
     checkBackButton!
     recalculateKrajeObyv!
     draw getRows void
+$ ".selectionRow .back a" .click (evt) ->
+    evt.preventDefault!
+    filters := {}
+    recalculateKrajeObyv!
+    draw getRows null
+    $selectSkupina
+        ..val ""
+        ..trigger "chosen:updated"
 checkBackButton = ->
     if filters.vek || filters.pohlavi || lastDisplayedRows
         $ ".selectionRow .back" .removeClass "disabled"
