@@ -63,7 +63,7 @@
     });
   };
   async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadGeoJsons, loadObyvatele], function(err, arg$){
-    var hospitalizace, diagnozy_raw, skupiny, kraje_raw, kraje_geojson, obyvatele, kraje, i$, len$, ref$, id, nazev, obyvateleAverage, ref1$, geometry, diagnozy, kod, record, recalculateKrajeObyv, lastDisplayedRows, getRows, passingFilter, draw, drawSums, drawBarCharts, drawMap, formatNumber, x$, $selectSkupina, y$, skupina, z$, z1$, z2$, $selectPohlavi, z3$, z4$, $selectVek, z5$, filters, changeFilter;
+    var hospitalizace, diagnozy_raw, skupiny, kraje_raw, kraje_geojson, obyvatele, kraje, i$, len$, ref$, id, nazev, obyvateleAverage, ref1$, geometry, diagnozy, kod, record, recalculateKrajeObyv, lastDisplayedRows, getRows, passingFilter, draw, drawSums, drawBarCharts, drawMap, formatNumber, x$, $selectSkupina, y$, skupina, z$, z1$, z2$, $selectPohlavi, z3$, z4$, $selectVek, z5$, filters, changeFilter, checkBackButton;
     hospitalizace = arg$[0], diagnozy_raw = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3], kraje_geojson = arg$[4], obyvatele = arg$[5];
     kraje = {};
     for (i$ = 0, len$ = kraje_raw.length; i$ < len$; ++i$) {
@@ -108,6 +108,7 @@
         skupinaId = lastDisplayedRows;
       }
       lastDisplayedRows = skupinaId;
+      checkBackButton();
       currentHospitalizaceIndex = 0;
       rows = !skupinaId
         ? skupiny
@@ -409,8 +410,16 @@
         value = false;
       }
       filters[field] = value;
+      checkBackButton();
       recalculateKrajeObyv();
       return draw(getRows(void 8));
+    };
+    checkBackButton = function(){
+      if (filters.vek || filters.pohlavi || lastDisplayedRows) {
+        return $(".selectionRow .back").removeClass("disabled");
+      } else {
+        return $(".selectionRow .back").addClass("disabled");
+      }
     };
     recalculateKrajeObyv();
     return draw(getRows(null));

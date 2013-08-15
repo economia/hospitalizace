@@ -68,6 +68,7 @@ getRows = (skupinaId) ->
     if skupinaId is void
         skupinaId = lastDisplayedRows
     lastDisplayedRows := skupinaId
+    checkBackButton!
     currentHospitalizaceIndex = 0
     rows = if not skupinaId
         skupiny
@@ -304,8 +305,14 @@ filters = {}
 changeFilter = (field, value) ->
     if value.length is 0 then value = false
     filters[field] = value
+    checkBackButton!
     recalculateKrajeObyv!
     draw getRows void
+checkBackButton = ->
+    if filters.vek || filters.pohlavi || lastDisplayedRows
+        $ ".selectionRow .back" .removeClass "disabled"
+    else
+        $ ".selectionRow .back" .addClass "disabled"
 
 recalculateKrajeObyv!
 draw getRows null

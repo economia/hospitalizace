@@ -14,6 +14,19 @@ body #wrap .selectionRow {
   float: left;
   margin-bottom: 10px;
 }
+body #wrap .selectionRow .back {
+  display: block;
+  float: left;
+  width: 100%;
+  margin-bottom: 5px;
+}
+body #wrap .selectionRow .back.disabled {
+  visibility: hidden;
+}
+body #wrap .selectionRow .back a {
+  font-size: 0.8em;
+  color: #174f82;
+}
 body #wrap .selectionRow div {
   float: left;
 }
