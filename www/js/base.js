@@ -1,15 +1,21 @@
 (function(){
-  var lineHeight, linePadding, barChartWidth, numOfYears, loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadObyvatele, loadGeoJsons, this$ = this;
+  var lineHeight, linePadding, barChartWidth, numOfYears, skupinyWithoutDetails, loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadObyvatele, loadGeoJsons, this$ = this;
   lineHeight = 200;
   linePadding = 20;
   barChartWidth = 200;
   numOfYears = 5;
   d3.selectAll(".fallback").remove();
+  skupinyWithoutDetails = [];
   new Tooltip().watchElements();
   loadHospitalizace = function(cb){
     var ssv, this$ = this;
     ssv = d3.dsv(";", "text/csv");
     return ssv("../hospitalizace.csv", function(row){
+      var skupina;
+      skupina = row.KOD.substr(0, 2) + "00";
+      if (row.KOD === skupina && !in$(skupina, skupinyWithoutDetails)) {
+        skupinyWithoutDetails.push(skupina);
+      }
       return {
         kod: row.KOD,
         rok: row.ROK,
@@ -17,7 +23,7 @@
         vek: row.VEKKAT,
         kraj: +row.KRAJ,
         pocetHospitalizovanych: +row.HOSP,
-        skupina: row.KOD.substr(0, 2) + "00"
+        skupina: skupina
       };
     }, function(err, data){
       return cb(err, data);
@@ -137,10 +143,6 @@
         foundSomething = false;
         for (;;) {
           row = hospitalizace[currentHospitalizaceIndex];
-          currentHospitalizaceIndex++;
-          if (currentHospitalizaceIndex > 1000000) {
-            break;
-          }
           if (!row) {
             break;
           }
@@ -151,10 +153,12 @@
             if (foundSomething) {
               break;
             } else {
+              currentHospitalizaceIndex++;
               continue;
             }
           }
           foundSomething = true;
+          currentHospitalizaceIndex++;
           if (!passingFilter(row)) {
             continue;
           }
@@ -202,7 +206,7 @@
       return true;
     };
     draw = function(rowsData){
-      var sums, container, rows, x$, h2, y$;
+      var sums, container, rows, x$, h2;
       rowsData.sort(function(a, b){
         return b.sum - a.sum;
       });
@@ -217,10 +221,9 @@
         return (index + 1) + ". <span>" + row.title + "</span>";
       });
       if (!lastDisplayedRows) {
-        y$ = h2;
-        y$.attr('class', 'link');
-        y$.attr('data-tooltip', "Kliknutím zobrazíte jednotlivé diagnózy");
-        y$.on('click', function(row){
+        h2.filter(function(row){
+          return !in$(row.skupinaId, skupinyWithoutDetails);
+        }).attr('class', 'link').attr('data-tooltip', "Kliknutím zobrazíte jednotlivé diagnózy").on('click', function(row){
           var x$;
           x$ = $selectSkupina;
           x$.val(row.skupinaId);
@@ -390,8 +393,10 @@
     });
     for (i$ = 0, len$ = skupiny.length; i$ < len$; ++i$) {
       skupina = skupiny[i$];
-      z$ = $("<option value='" + skupina.kod + "'>" + skupina.nazev + "</option>");
-      z$.appendTo($selectSkupina);
+      if (!in$(skupina.kod, skupinyWithoutDetails)) {
+        z$ = $("<option value='" + skupina.kod + "'>" + skupina.nazev + "</option>");
+        z$.appendTo($selectSkupina);
+      }
     }
     z1$ = $selectSkupina;
     z1$.chosen({
@@ -446,4 +451,9 @@
     recalculateKrajeObyv();
     return draw(getRows(null));
   });
+  function in$(x, arr){
+    var i = -1, l = arr.length >>> 0;
+    while (++i < l) if (x === arr[i] && i in arr) return true;
+    return false;
+  }
 }).call(this);

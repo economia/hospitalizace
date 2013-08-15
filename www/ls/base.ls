@@ -3,19 +3,24 @@ linePadding = 20
 barChartWidth = 200
 numOfYears = 5
 d3.selectAll ".fallback" .remove!
+skupinyWithoutDetails = []
 new Tooltip!watchElements!
 loadHospitalizace = (cb) ->
     ssv = d3.dsv ";" "text/csv"
     (err, data) <~ ssv do
         "../hospitalizace.csv"
         (row) ->
-            kod: row.KOD
-            rok: row.ROK
-            pohlavi: if row.POHL == "1" then "muz" else "zena"
-            vek: row.VEKKAT
-            kraj: +row.KRAJ
-            pocetHospitalizovanych: +row.HOSP
-            skupina: "#{row.KOD.substr 0 2}00"
+            skupina = "#{row.KOD.substr 0 2}00"
+            if row.KOD == skupina and skupina not in skupinyWithoutDetails
+                skupinyWithoutDetails.push skupina
+            return do
+                kod: row.KOD
+                rok: row.ROK
+                pohlavi: if row.POHL == "1" then "muz" else "zena"
+                vek: row.VEKKAT
+                kraj: +row.KRAJ
+                pocetHospitalizovanych: +row.HOSP
+                skupina: skupina
     cb err, data
 
 loadDiagnozy = (cb) ->
@@ -95,8 +100,6 @@ getRows = (skupinaId) ->
         foundSomething = no
         loop
             row = hospitalizace[currentHospitalizaceIndex]
-            currentHospitalizaceIndex++
-            break if currentHospitalizaceIndex > 1000000
             break if !row
             isValidRow = if not skupinaId
                 row.skupina == record.kod
@@ -106,8 +109,10 @@ getRows = (skupinaId) ->
                 if foundSomething
                     break
                 else
+                    currentHospitalizaceIndex++
                     continue
             foundSomething = yes
+            currentHospitalizaceIndex++
             continue if not passingFilter row
             sum += row.pocetHospitalizovanych
             sumYears[row.rok] += row.pocetHospitalizovanych
@@ -142,11 +147,12 @@ draw = (rowsData) ->
             .attr \class \row
     h2 = rows.append "h2"
         ..html (row, index) -> "#{index+1}. <span>#{row.title}</span>"
-    if !lastDisplayedRows
+    if not lastDisplayedRows
         h2
-            ..attr \class \link
-            ..attr \data-tooltip "Kliknutím zobrazíte jednotlivé diagnózy"
-            ..on \click (row) ->
+            .filter (row) -> row.skupinaId not in skupinyWithoutDetails
+            .attr \class \link
+            .attr \data-tooltip "Kliknutím zobrazíte jednotlivé diagnózy"
+            .on \click (row) ->
                 $selectSkupina
                     ..val row.skupinaId
                     ..trigger "chosen:updated"
@@ -278,8 +284,9 @@ $selectSkupina = $ ".selectionRow .skupina select"
     ..on \change ->
         draw getRows @value
 for skupina in skupiny
-    $ "<option value='#{skupina.kod}'>#{skupina.nazev}</option>"
-        ..appendTo $selectSkupina
+    if skupina.kod not in skupinyWithoutDetails
+        $ "<option value='#{skupina.kod}'>#{skupina.nazev}</option>"
+            ..appendTo $selectSkupina
 $selectSkupina
     ..chosen allow_single_deselect: true
 
