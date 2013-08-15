@@ -4,10 +4,13 @@ body
     font-family sans-serif
     .tooltip
         z-index 10
+        max-width 400px
     #wrap
         margin 20px // TODO: remove
         width 670px
         .selectionRow
+            float left
+            margin-bottom 10px
             div
                 float left
             .skupina
@@ -45,6 +48,11 @@ body
                     top 7px
                     left 7px
                     z-index 2
+                    span
+                        text-decoration none
+                        &:hover
+                            cursor pointer
+                            text-decoration underline
                 .sum
                     position relative
                     width 200px

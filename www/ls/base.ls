@@ -141,7 +141,8 @@ draw = (rowsData) ->
             .attr \class \row
     rows
         .append "h2"
-            ..text (row, index) -> "#{index+1}. #{row.title}"
+            ..html (row, index) -> "#{index+1}. <span>#{row.title}</span>"
+            ..attr \data-tooltip "Kliknutím zobrazíte jednotlivé diagnózy"
             ..on \click (row) -> draw getRows row.skupinaId
 
     drawSums sums, rows

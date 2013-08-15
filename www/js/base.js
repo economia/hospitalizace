@@ -212,9 +212,10 @@
       container.selectAll("*").remove();
       rows = container.selectAll(".row").data(rowsData).enter().append("div").attr('class', 'row');
       x$ = rows.append("h2");
-      x$.text(function(row, index){
-        return (index + 1) + ". " + row.title;
+      x$.html(function(row, index){
+        return (index + 1) + ". <span>" + row.title + "</span>";
       });
+      x$.attr('data-tooltip', "Kliknutím zobrazíte jednotlivé diagnózy");
       x$.on('click', function(row){
         return draw(getRows(row.skupinaId));
       });

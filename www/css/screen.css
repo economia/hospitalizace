@@ -4,10 +4,15 @@ body {
 }
 body .tooltip {
   z-index: 10;
+  max-width: 400px;
 }
 body #wrap {
   margin: 20px;
   width: 670px;
+}
+body #wrap .selectionRow {
+  float: left;
+  margin-bottom: 10px;
 }
 body #wrap .selectionRow div {
   float: left;
@@ -56,6 +61,13 @@ body #wrap .container .row h2 {
   top: 7px;
   left: 7px;
   z-index: 2;
+}
+body #wrap .container .row h2 span {
+  text-decoration: none;
+}
+body #wrap .container .row h2 span:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 body #wrap .container .row .sum {
   position: relative;
