@@ -263,23 +263,28 @@ formatNumber = (num) ->
         num = "#{num.substr 0, num.length - 3}&nbsp;#{num.substr -3}"
     num
 
-$selectSkupina = $ '<select />'
-    ..appendTo ".selectionRow"
+$selectSkupina = $ "<select data-placeholder='Skupina diagnóz' ><option value=''></option></select>"
+    ..appendTo ".selectionRow .skupina"
     ..on \change ->
         draw getRows @value
 for skupina in skupiny
     $ "<option value='#{skupina.kod}'>#{skupina.nazev}</option>"
         ..appendTo $selectSkupina
+$selectSkupina
+    ..chosen allow_single_deselect: true
 
-$selectPohlavi = $ "<select>
+$selectPohlavi = $ "<select data-placeholder='pohlaví'>
+<option value=''></option>
 <option value='muz'>Muži</option>
 <option value='zena'>Ženy</option>
 </select>"
-    ..appendTo ".selectionRow"
+    ..appendTo ".selectionRow .pohlavi"
     ..on \change ->
         changeFilter "pohlavi" @value
+    ..chosen allow_single_deselect: true
 
-$selectVek = $ "<select>
+$selectVek = $ "<select data-placeholder='věk'>
+<option value=''></option>
 <option value='15-34'>15-34</option>
 <option value='35-44'>35-44</option>
 <option value='45-54'>45-54</option>
@@ -287,11 +292,13 @@ $selectVek = $ "<select>
 <option value='65-74'>65-74</option>
 <option value='75+'>75+</option>
 </select>"
-    ..appendTo ".selectionRow"
+    ..appendTo ".selectionRow .vek"
     ..on \change -> changeFilter \vek @value
+    ..chosen allow_single_deselect: true
 
 filters = {}
 changeFilter = (field, value) ->
+    if value.length is 0 then value = false
     filters[field] = value
     recalculateKrajeObyv!
     draw getRows void

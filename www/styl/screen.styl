@@ -7,6 +7,30 @@ body
     #wrap
         margin 20px // TODO: remove
         width 670px
+        .selectionRow
+            div
+                float left
+            .skupina
+                width 440px
+                select
+                    width @width
+                .chosen-search
+                    width (@width - 10px)
+                .chosen-results
+                    clear left
+            .pohlavi
+                width 90px
+                margin 0px 15px
+                select
+                    width 90px
+                .chosen-search
+                    display none
+            .vek
+                width 90px
+                select
+                    width @width
+                .chosen-search
+                    display none
         .container
             .row
                 position relative
@@ -69,3 +93,4 @@ body
                         stroke-width 0.5
                         &:hover
                             opacity 0.85
+

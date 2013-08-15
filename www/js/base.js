@@ -63,7 +63,7 @@
     });
   };
   async.parallel([loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadGeoJsons, loadObyvatele], function(err, arg$){
-    var hospitalizace, diagnozy_raw, skupiny, kraje_raw, kraje_geojson, obyvatele, kraje, i$, len$, ref$, id, nazev, obyvateleAverage, ref1$, geometry, diagnozy, kod, record, recalculateKrajeObyv, lastDisplayedRows, getRows, passingFilter, draw, drawSums, drawBarCharts, drawMap, formatNumber, x$, $selectSkupina, skupina, y$, z$, $selectPohlavi, z1$, $selectVek, filters, changeFilter;
+    var hospitalizace, diagnozy_raw, skupiny, kraje_raw, kraje_geojson, obyvatele, kraje, i$, len$, ref$, id, nazev, obyvateleAverage, ref1$, geometry, diagnozy, kod, record, recalculateKrajeObyv, lastDisplayedRows, getRows, passingFilter, draw, drawSums, drawBarCharts, drawMap, formatNumber, x$, $selectSkupina, skupina, y$, z$, z1$, $selectPohlavi, z2$, $selectVek, filters, changeFilter;
     hospitalizace = arg$[0], diagnozy_raw = arg$[1], skupiny = arg$[2], kraje_raw = arg$[3], kraje_geojson = arg$[4], obyvatele = arg$[5];
     kraje = {};
     for (i$ = 0, len$ = kraje_raw.length; i$ < len$; ++i$) {
@@ -369,8 +369,8 @@
       }
       return num;
     };
-    x$ = $selectSkupina = $('<select />');
-    x$.appendTo(".selectionRow");
+    x$ = $selectSkupina = $("<select data-placeholder='Skupina diagnóz' ><option value=''></option></select>");
+    x$.appendTo(".selectionRow .skupina");
     x$.on('change', function(){
       return draw(getRows(this.value));
     });
@@ -379,18 +379,31 @@
       y$ = $("<option value='" + skupina.kod + "'>" + skupina.nazev + "</option>");
       y$.appendTo($selectSkupina);
     }
-    z$ = $selectPohlavi = $("<select><option value='muz'>Muži</option><option value='zena'>Ženy</option></select>");
-    z$.appendTo(".selectionRow");
-    z$.on('change', function(){
+    z$ = $selectSkupina;
+    z$.chosen({
+      allow_single_deselect: true
+    });
+    z1$ = $selectPohlavi = $("<select data-placeholder='pohlaví'><option value=''></option><option value='muz'>Muži</option><option value='zena'>Ženy</option></select>");
+    z1$.appendTo(".selectionRow .pohlavi");
+    z1$.on('change', function(){
       return changeFilter("pohlavi", this.value);
     });
-    z1$ = $selectVek = $("<select><option value='15-34'>15-34</option><option value='35-44'>35-44</option><option value='45-54'>45-54</option><option value='55-64'>55-64</option><option value='65-74'>65-74</option><option value='75+'>75+</option></select>");
-    z1$.appendTo(".selectionRow");
-    z1$.on('change', function(){
+    z1$.chosen({
+      allow_single_deselect: true
+    });
+    z2$ = $selectVek = $("<select data-placeholder='věk'><option value=''></option><option value='15-34'>15-34</option><option value='35-44'>35-44</option><option value='45-54'>45-54</option><option value='55-64'>55-64</option><option value='65-74'>65-74</option><option value='75+'>75+</option></select>");
+    z2$.appendTo(".selectionRow .vek");
+    z2$.on('change', function(){
       return changeFilter('vek', this.value);
+    });
+    z2$.chosen({
+      allow_single_deselect: true
     });
     filters = {};
     changeFilter = function(field, value){
+      if (value.length === 0) {
+        value = false;
+      }
       filters[field] = value;
       recalculateKrajeObyv();
       return draw(getRows(void 8));

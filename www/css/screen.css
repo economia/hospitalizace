@@ -9,6 +9,40 @@ body #wrap {
   margin: 20px;
   width: 670px;
 }
+body #wrap .selectionRow div {
+  float: left;
+}
+body #wrap .selectionRow .skupina {
+  width: 440px;
+}
+body #wrap .selectionRow .skupina select {
+  width: 440px;
+}
+body #wrap .selectionRow .skupina .chosen-search {
+  width: 430px;
+}
+body #wrap .selectionRow .skupina .chosen-results {
+  clear: left;
+}
+body #wrap .selectionRow .pohlavi {
+  width: 90px;
+  margin: 0px 15px;
+}
+body #wrap .selectionRow .pohlavi select {
+  width: 90px;
+}
+body #wrap .selectionRow .pohlavi .chosen-search {
+  display: none;
+}
+body #wrap .selectionRow .vek {
+  width: 90px;
+}
+body #wrap .selectionRow .vek select {
+  width: 90px;
+}
+body #wrap .selectionRow .vek .chosen-search {
+  display: none;
+}
 body #wrap .container .row {
   position: relative;
   float: left;
