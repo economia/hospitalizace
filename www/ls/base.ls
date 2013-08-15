@@ -174,7 +174,6 @@ drawSums = (sumValues, rows) ->
         .range [30 110]
     rows.append "div"
         ..attr \class \sum
-        ..attr \data-tooltip -> escape "Průměrně <strong>#{formatNumber Math.round it.sum / 5}</strong> hospitalizací ročně"
         ..append \div
             ..attr \class \valueContainer
             ..append "span"
@@ -192,9 +191,9 @@ drawSums = (sumValues, rows) ->
             ..append \span
                 ..html ->
                     "<br />" + if 1 < (Math.round it.sum / 5000) < 5
-                        "tisíce hospitalizací"
+                        "tisíce hospitalizací ročně"
                     else
-                        "tisíc hospitalizací"
+                        "tisíc hospitalizací ročně"
             ..style \height ->
                 height = heightScale it.sum
                 if it.sum <= 1000

@@ -244,9 +244,6 @@
       heightScale = d3.scale.sqrt().domain([0, sumValues[0]]).range([30, 110]);
       x$ = rows.append("div");
       x$.attr('class', 'sum');
-      x$.attr('data-tooltip', function(it){
-        return escape("Průměrně <strong>" + formatNumber(Math.round(it.sum / 5)) + "</strong> hospitalizací ročně");
-      });
       y$ = x$.append('div');
       y$.attr('class', 'valueContainer');
       z$ = y$.append("span");
@@ -269,7 +266,7 @@
       z1$ = y$.append('span');
       z1$.html(function(it){
         var ref$;
-        return "<br />" + (1 < (ref$ = Math.round(it.sum / 5000)) && ref$ < 5 ? "tisíce hospitalizací" : "tisíc hospitalizací");
+        return "<br />" + (1 < (ref$ = Math.round(it.sum / 5000)) && ref$ < 5 ? "tisíce hospitalizací ročně" : "tisíc hospitalizací ročně");
       });
       y$.style('height', function(it){
         var height;
