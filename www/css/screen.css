@@ -99,6 +99,9 @@ body #wrap .container .row .sum .valueContainer {
   bottom: 0px;
   right: 0px;
 }
+body #wrap .container .row .sum .valueContainer span {
+  font-size: 0.8em;
+}
 body #wrap .container .row .years {
   position: relative;
   width: 200px;
