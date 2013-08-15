@@ -267,7 +267,10 @@
         return height + "em";
       });
       z1$ = y$.append('span');
-      z1$.html("<br />tisíc hospitalizací");
+      z1$.html(function(it){
+        var ref$;
+        return "<br />" + (1 < (ref$ = Math.round(it.sum / 5000)) && ref$ < 5 ? "tisíce hospitalizací" : "tisíc hospitalizací");
+      });
       y$.style('height', function(it){
         var height;
         height = heightScale(it.sum);

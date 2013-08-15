@@ -190,7 +190,11 @@ drawSums = (sumValues, rows) ->
                         height = Math.min height, 1.75
                     "#{height}em"
             ..append \span
-                ..html "<br />tisíc hospitalizací"
+                ..html ->
+                    "<br />" + if 1 < (Math.round it.sum / 5000) < 5
+                        "tisíce hospitalizací"
+                    else
+                        "tisíc hospitalizací"
             ..style \height ->
                 height = heightScale it.sum
                 if it.sum <= 1000
