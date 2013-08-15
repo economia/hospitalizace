@@ -2,7 +2,7 @@
   var lineHeight, linePadding, barChartWidth, numOfYears, skupinyWithoutDetails, loadHospitalizace, loadDiagnozy, loadSkupiny, loadKraje, loadObyvatele, loadGeoJsons, this$ = this;
   lineHeight = 200;
   linePadding = 20;
-  barChartWidth = 200;
+  barChartWidth = 170;
   numOfYears = 5;
   d3.selectAll(".fallback").remove();
   skupinyWithoutDetails = [];
@@ -223,6 +223,8 @@
       if (!lastDisplayedRows) {
         h2.filter(function(row){
           return !in$(row.skupinaId, skupinyWithoutDetails);
+        }).html(function(row, index){
+          return (index + 1) + ". <span>" + row.title + " &raquo;</span>";
         }).attr('class', 'link').attr('data-tooltip', "Kliknutím zobrazíte jednotlivé diagnózy").on('click', function(row){
           var x$;
           x$ = $selectSkupina;
@@ -311,7 +313,7 @@
       y$.attr('data-tooltip', function(data){
         return escape("<strong>" + formatNumber(data.count) + "</strong> hospitalizací");
       });
-      y$.style('width', (columnWidth - 1) + "px");
+      y$.style('width', (columnWidth - 2) + "px");
       y$.style('left', function(data, index){
         return index * columnWidth + "px";
       });

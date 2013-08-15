@@ -1,6 +1,6 @@
 lineHeight = 200
 linePadding = 20
-barChartWidth = 200
+barChartWidth = 170
 numOfYears = 5
 d3.selectAll ".fallback" .remove!
 skupinyWithoutDetails = []
@@ -150,6 +150,7 @@ draw = (rowsData) ->
     if not lastDisplayedRows
         h2
             .filter (row) -> row.skupinaId not in skupinyWithoutDetails
+            .html (row, index) -> "#{index+1}. <span>#{row.title} &raquo;</span>"
             .attr \class \link
             .attr \data-tooltip "Kliknutím zobrazíte jednotlivé diagnózy"
             .on \click (row) ->
@@ -221,7 +222,7 @@ drawBarCharts = (rows, rowsData) ->
         .append \div
             ..attr \class \year
             ..attr \data-tooltip (data) -> escape "<strong>#{formatNumber data.count}</strong> hospitalizací"
-            ..style \width "#{columnWidth-1}px"
+            ..style \width "#{columnWidth-2}px"
             ..style \left (data, index) -> "#{index*columnWidth}px"
             ..append \div
                 ..attr \class \value
