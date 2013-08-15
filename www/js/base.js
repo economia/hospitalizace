@@ -202,7 +202,7 @@
       return true;
     };
     draw = function(rowsData){
-      var sums, container, rows, x$;
+      var sums, container, rows, x$, h2, y$;
       rowsData.sort(function(a, b){
         return b.sum - a.sum;
       });
@@ -212,14 +212,22 @@
       container = d3.select(".container");
       container.selectAll("*").remove();
       rows = container.selectAll(".row").data(rowsData).enter().append("div").attr('class', 'row');
-      x$ = rows.append("h2");
+      x$ = h2 = rows.append("h2");
       x$.html(function(row, index){
         return (index + 1) + ". <span>" + row.title + "</span>";
       });
-      x$.attr('data-tooltip', "Kliknutím zobrazíte jednotlivé diagnózy");
-      x$.on('click', function(row){
-        return draw(getRows(row.skupinaId));
-      });
+      if (!lastDisplayedRows) {
+        y$ = h2;
+        y$.attr('class', 'link');
+        y$.attr('data-tooltip', "Kliknutím zobrazíte jednotlivé diagnózy");
+        y$.on('click', function(row){
+          var x$;
+          x$ = $selectSkupina;
+          x$.val(row.skupinaId);
+          x$.trigger("chosen:updated");
+          return draw(getRows(row.skupinaId));
+        });
+      }
       drawSums(sums, rows);
       drawBarCharts(rows, rowsData);
       return drawMap(rows, rowsData);

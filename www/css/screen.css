@@ -75,10 +75,10 @@ body #wrap .container .row h2 {
   left: 7px;
   z-index: 2;
 }
-body #wrap .container .row h2 span {
+body #wrap .container .row h2.link span {
   text-decoration: none;
 }
-body #wrap .container .row h2 span:hover {
+body #wrap .container .row h2.link span:hover {
   cursor: pointer;
   text-decoration: underline;
 }

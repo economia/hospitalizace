@@ -140,11 +140,17 @@ draw = (rowsData) ->
         .data rowsData
         .enter!.append "div"
             .attr \class \row
-    rows
-        .append "h2"
-            ..html (row, index) -> "#{index+1}. <span>#{row.title}</span>"
+    h2 = rows.append "h2"
+        ..html (row, index) -> "#{index+1}. <span>#{row.title}</span>"
+    if !lastDisplayedRows
+        h2
+            ..attr \class \link
             ..attr \data-tooltip "Kliknutím zobrazíte jednotlivé diagnózy"
-            ..on \click (row) -> draw getRows row.skupinaId
+            ..on \click (row) ->
+                $selectSkupina
+                    ..val row.skupinaId
+                    ..trigger "chosen:updated"
+                draw getRows row.skupinaId
 
     drawSums sums, rows
     drawBarCharts rows, rowsData
